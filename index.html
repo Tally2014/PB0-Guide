@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phantom Blade Zero – Trophy &amp; Side Quest Companion</title>
+<meta name="description" content="Unofficial Phantom Blade Zero companion: missable quests, trophies and true-ending checklist. Progress is saved privately in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif+SC:wght@400;600&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#090A0C;--bg2:#101215;--card:#17191D;--elev:#202329;
+  --accent:#A51F2B;--accent2:#6F1822;--crimson:#D14343;
+  --text:#E8E4DC;--text2:#999A9C;--muted:#686C73;--border:#303238;
+  --success:#668C75;--warn:#C49A55;
+  --gold:#C9A45C;--platinum:#9FC3D6;--silver:#B8BCC4;--bronze:#B07A4F;
+  --serif:"Cormorant Garamond","Noto Serif SC","Songti SC",Georgia,serif;
+  --cjk:"Noto Serif SC","Songti SC","SimSun",serif;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --radius:10px;--sidebar:248px;--pad:16px;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+  --metal:linear-gradient(90deg,transparent,#4a4d55 20%,#8a8478 50%,#4a4d55 80%,transparent);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;
+  background-image:radial-gradient(1200px 600px at 80% -10%,rgba(165,31,43,.10),transparent 60%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 24h12V12h12v24h12V24h12M24 0v12M24 36v12' fill='none' stroke='%23ffffff' stroke-opacity='.018' stroke-width='1'/%3E%3C/svg%3E");}
+a{color:var(--crimson)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:.02em;margin:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:2px solid var(--crimson);outline-offset:2px}
+
+/* Layout */
+.app{display:flex;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:linear-gradient(180deg,#0d0e11,#0a0b0d);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:40;transition:transform .25s ease}
+.brand{padding:22px 20px 16px;border-bottom:1px solid var(--border);position:relative}
+.brand .seal{display:inline-grid;place-items:center;width:34px;height:34px;border:1px solid var(--accent);color:var(--crimson);font-family:var(--cjk);border-radius:4px;margin-bottom:10px;background:rgba(165,31,43,.08)}
+.brand h1{font-size:22px;line-height:1.1}
+.brand p{margin:4px 0 0;color:var(--text2);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.nav{padding:10px 10px;flex:1;overflow:auto}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-left:2px solid transparent;padding:10px 12px;border-radius:0 8px 8px 0;color:var(--text2);cursor:pointer;text-align:left;font-size:14px;transition:background .15s,color .15s}
+.nav button:hover{background:var(--card);color:var(--text)}
+.nav button.active{background:linear-gradient(90deg,rgba(165,31,43,.18),transparent);color:var(--text);border-left-color:var(--crimson)}
+.nav svg{width:18px;height:18px;flex:none;opacity:.85}
+.nav .count{margin-left:auto;font-size:11px;background:var(--accent2);color:#fff;border-radius:10px;padding:1px 7px}
+.side-foot{padding:14px 18px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.main{flex:1;margin-left:var(--sidebar);min-width:0}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:12px 28px;background:rgba(9,10,12,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.btn.menu-btn{display:none}
+.search{position:relative;flex:1;max-width:520px}
+.search input[type=text]{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px 9px 36px;outline:none}
+.search input:focus{border-color:var(--accent)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--elev);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);max-height:60vh;overflow:auto;display:none}
+.results.open{display:block}
+.results button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--border);padding:10px 14px;cursor:pointer}
+.results button:hover,.results button.kb{background:var(--card)}
+.results small{display:block;color:var(--muted);font-size:12px}
+.results .empty{padding:14px;color:var(--muted)}
+.save-ind{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.save-ind .dot{width:7px;height:7px;border-radius:50%;background:var(--success)}
+.save-ind.err .dot{background:var(--crimson)}
+.save-ind.pending .dot{background:var(--warn)}
+.content{padding:24px 28px 80px;max-width:1240px}
+
+/* Buttons & controls */
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--elev);border:1px solid var(--border);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;color:var(--text);transition:border-color .15s,background .15s;text-decoration:none}
+.btn:hover{border-color:#4a4d55;background:#262a31}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#b8232f}
+.btn.danger{border-color:var(--accent2);color:#f0b9b9}
+.btn.danger:hover{background:var(--accent2);color:#fff}
+.btn.ghost{background:none}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 13px;font-size:13px;cursor:pointer;color:var(--text2)}
+.chip.on{background:rgba(165,31,43,.18);border-color:var(--accent);color:var(--text)}
+select,input[type=text],textarea{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;outline:none}
+select:focus,input[type=text]:focus,textarea:focus{border-color:var(--accent)}
+textarea{width:100%;min-height:84px;resize:vertical}
+
+/* Custom checkbox */
+.cb{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;border:1.5px solid #4a4d55;border-radius:5px;background:var(--bg2);cursor:pointer;display:inline-grid;place-items:center;transition:all .15s;margin:0}
+.cb:hover{border-color:var(--crimson)}
+.cb:checked{background:var(--accent);border-color:var(--accent)}
+.cb:checked::after{content:"";width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative}
+.card.elev{background:var(--elev)}
+.divider{height:1px;background:var(--metal);margin:22px 0;opacity:.6}
+.section-title{display:flex;align-items:center;gap:12px;margin:30px 0 14px}
+.section-title h2{font-size:26px}
+.section-title .line{flex:1;height:1px;background:var(--metal);opacity:.5}
+.page-head{margin-bottom:20px}
+.page-head h2{font-size:34px;line-height:1.1}
+.page-head p{color:var(--text2);margin:6px 0 0;max-width:760px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.muted{color:var(--muted)}.dim{color:var(--text2)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid var(--border);color:var(--text2);white-space:nowrap}
+.badge.critical{background:rgba(165,31,43,.18);border-color:var(--accent);color:#f2b4b4}
+.badge.warning{background:rgba(196,154,85,.12);border-color:#6d5630;color:var(--warn)}
+.badge.info{background:rgba(120,140,170,.10);border-color:#3d4656;color:#a9b6cc}
+.badge.trophy{border-color:#5c4b2b;color:var(--gold)}
+.badge.true{border-color:#4f3f67;color:#bda6e0;background:rgba(130,90,190,.10)}
+.badge.ok{border-color:#3f5a49;color:#9cc6ab;background:rgba(102,140,117,.12)}
+.badge.opt{color:var(--text2)}
+
+/* Progress */
+.bar{height:6px;background:#0c0d10;border-radius:4px;overflow:hidden;border:1px solid #23252a}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--crimson));width:0;transition:width .4s ease}
+.bar.good>i{background:linear-gradient(90deg,#3f5a49,var(--success))}
+.bar.gold>i{background:linear-gradient(90deg,#6d5630,var(--gold))}
+.pct{font-variant-numeric:tabular-nums;font-size:12px;color:var(--text2)}
+.ring{--p:0;width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--crimson) calc(var(--p)*1%),#24262c 0);display:grid;place-items:center;flex:none}
+.ring>div{width:96px;height:96px;border-radius:50%;background:var(--bg);display:grid;place-items:center;text-align:center;font-family:var(--serif);font-size:28px;line-height:1}
+.ring small{display:block;font-family:var(--sans);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+
+/* Media */
+.media{position:relative;overflow:hidden;background:
+  radial-gradient(500px 220px at 70% 20%,rgba(165,31,43,.25),transparent 70%),
+  linear-gradient(135deg,#1a1c21,#0b0c0f 70%)}
+.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;transition:opacity .4s}
+.media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,10,12,.15),rgba(9,10,12,.92) 92%)}
+.media.img-failed::before{content:"刃";position:absolute;right:24px;top:10px;font-family:var(--cjk);font-size:120px;color:rgba(165,31,43,.12)}
+body.no-art .media img{display:none}
+.media>.over{position:relative;z-index:2}
+
+/* Hero */
+.hero{border-radius:14px;border:1px solid var(--border);min-height:300px;display:flex;align-items:flex-end;padding:30px}
+.hero .over{display:flex;gap:28px;align-items:flex-end;width:100%;flex-wrap:wrap}
+.hero h2{font-size:48px;line-height:1}
+.hero .sub{font-family:var(--serif);font-style:italic;color:var(--warn);font-size:20px;margin-top:4px}
+.hero .meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--text2)}
+.hero .meta b{display:block;color:var(--text);font-weight:600;font-size:15px}
+.stat .n{font-family:var(--serif);font-size:34px;line-height:1}
+.stat .l{font-size:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+.stat::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:2px;background:var(--accent2);border-radius:2px}
+
+/* Alerts */
+.alert{border:1px solid var(--accent);background:linear-gradient(90deg,rgba(165,31,43,.22),rgba(165,31,43,.05));border-radius:var(--radius);padding:16px 18px;display:flex;gap:16px;align-items:flex-start}
+.alert .k{font-size:11px;letter-spacing:.18em;color:#f2b4b4;font-weight:700}
+.alert h3{font-size:22px;margin:2px 0}
+.alert.warn{border-color:#6d5630;background:linear-gradient(90deg,rgba(196,154,85,.14),transparent)}
+.alert.warn .k{color:var(--warn)}
+.alert.okay{border-color:#3f5a49;background:linear-gradient(90deg,rgba(102,140,117,.15),transparent)}
+.alert.okay .k{color:#9cc6ab}
+.banner{margin:0 0 18px}
+.alert-ico{width:28px;height:28px;flex:none;color:var(--crimson)}
+
+/* Region */
+.region{margin-bottom:22px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg2)}
+.region-head{min-height:180px;padding:22px;display:flex;align-items:flex-end;cursor:pointer}
+.region-head .over{width:100%;display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.region-num{font-family:var(--serif);font-size:56px;line-height:.8;color:rgba(209,67,67,.55)}
+.region-head h3{font-size:30px}
+.region-body{padding:18px}
+.region.collapsed .region-body{display:none}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.info-grid .card{padding:14px}
+.info-grid h4{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.info-grid ul{margin:0;padding-left:18px}
+.info-grid li{margin:2px 0}
+
+/* Quest */
+.quest{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);margin-bottom:10px;transition:border-color .2s}
+.quest.done{opacity:.72}
+.quest.hl{border-color:var(--crimson);box-shadow:0 0 0 3px rgba(209,67,67,.2)}
+.quest.lvl-critical{border-left:3px solid var(--accent)}
+.quest.lvl-warning{border-left:3px solid var(--warn)}
+.quest.lvl-info{border-left:3px solid #4d5a70}
+.q-head{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.q-title{flex:1;min-width:0;background:none;border:0;text-align:left;cursor:pointer;padding:0}
+.q-title h4{font-size:19px;line-height:1.2}
+.q-title .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.q-prog{width:120px;flex:none}
+.chev{background:none;border:0;cursor:pointer;color:var(--muted);padding:4px;transition:transform .2s}
+.quest.open .chev{transform:rotate(180deg)}
+.q-body{display:none;padding:0 14px 14px 46px}
+.quest.open .q-body{display:block}
+.q-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px 18px;font-size:13px;margin-bottom:12px;padding:12px;background:var(--bg2);border-radius:8px;border:1px solid #24262b}
+.q-meta dt{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.q-meta dd{margin:0 0 4px;color:var(--text2)}
+.objs{list-style:none;margin:0;padding:0;counter-reset:o}
+.objs li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed #26282d}
+.objs li:last-child{border-bottom:0}
+.objs label{cursor:pointer;flex:1}
+.objs li.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:#4a4d55}
+.objs .num{font-family:var(--serif);color:var(--accent);width:18px;flex:none;text-align:right;padding-top:1px}
+.note{font-size:13px;color:var(--text2);border-left:2px solid var(--warn);padding:6px 10px;margin:10px 0;background:rgba(196,154,85,.05)}
+.q-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.research{font-style:italic;color:var(--warn)}
+body.compact .q-head{padding:8px 12px}
+body.compact .q-title h4{font-size:16px}
+body.compact .objs li{padding:4px 0}
+body.compact .region-head{min-height:120px}
+body.compact .card{padding:12px}
+
+/* Timeline */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:1px;background:var(--metal)}
+.tl-item{position:relative;margin-bottom:12px}
+.tl-item::before{content:"";position:absolute;left:-24px;top:20px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid #4a4d55}
+.tl-item.current::before{border-color:var(--crimson);background:var(--crimson);box-shadow:0 0 10px var(--crimson)}
+.tl-item.complete::before{border-color:var(--success);background:var(--success)}
+.tl-item .card{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.tl-item h4{font-size:20px}
+.cp{display:flex;gap:10px;align-items:center;font-size:13px;margin:6px 0}
+.cp .ico{width:18px;text-align:center}
+.req-list{list-style:none;padding:0;margin:8px 0 0}
+.req-list li{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:14px}
+.req-list .ok{color:var(--success)}.req-list .no{color:var(--crimson)}
+.linkish{background:none;border:0;color:var(--text);cursor:pointer;padding:0;text-decoration:underline;text-decoration-color:#4a4d55;text-underline-offset:3px}
+.linkish:hover{color:var(--crimson)}
+
+/* Trophy */
+.trophy{display:flex;gap:14px;align-items:flex-start}
+.trophy.got{border-color:#5c4b2b;background:linear-gradient(135deg,rgba(201,164,92,.08),var(--card) 60%)}
+.t-icon{width:56px;height:56px;flex:none;border-radius:10px;display:grid;place-items:center;background:var(--bg2);border:1px solid var(--border)}
+.t-icon svg{width:30px;height:30px}
+.t-icon.platinum{color:var(--platinum)}.t-icon.gold{color:var(--gold);border-color:#5c4b2b}.t-icon.silver{color:var(--silver)}.t-icon.bronze{color:var(--bronze)}
+.trophy h4{font-size:20px}
+.trophy .desc{color:var(--text2);font-size:13px;margin:2px 0 8px}
+.kv{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:8px}
+.kv b{color:var(--text2);font-weight:500}
+.toggle-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* Missable table */
+.mtable{width:100%;border-collapse:collapse;font-size:13px}
+.mtable th{text-align:left;font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px;border-bottom:1px solid var(--border)}
+.mtable td{padding:12px 10px;border-bottom:1px solid #22242a;vertical-align:top;color:var(--text2)}
+.mtable td:first-child{color:var(--text)}
+.mtable tr.done td{opacity:.55}
+
+/* Settings / journal */
+.setting{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #24262b}
+.setting:last-child{border-bottom:0}
+.setting p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.switch{position:relative;width:42px;height:24px;flex:none}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch span{position:absolute;inset:0;background:#2a2d33;border-radius:24px;cursor:pointer;transition:.2s;border:1px solid var(--border)}
+.switch span::before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--text2);border-radius:50%;transition:.2s}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::before{transform:translateX(18px);background:#fff}
+.switch input:focus-visible+span{outline:2px solid var(--crimson);outline-offset:2px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.notes-list{list-style:none;padding:0;margin:12px 0 0}
+.notes-list li{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #24262b;align-items:flex-start}
+.notes-list time{font-size:11px;color:var(--muted);display:block}
+.sources li{margin:6px 0}
+.quote{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--text2);text-align:center;margin:30px 0 0}
+
+/* Modal + toast */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;place-items:center;z-index:100;padding:16px}
+.modal-bg.open{display:grid}
+.modal{background:var(--elev);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:12px;padding:22px;max-width:440px;width:100%;box-shadow:var(--shadow)}
+.modal h3{font-size:24px;margin-bottom:8px}
+.modal p{color:var(--text2);margin:0 0 18px}
+.modal .row{display:flex;gap:10px;justify-content:flex-end}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--elev);border:1px solid var(--border);padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:.25s;z-index:110;font-size:14px;box-shadow:var(--shadow);max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.scrim{display:none}
+.storage-warn{margin:0 0 16px}
+
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .sidebar{transform:translateX(-100%)}
+  body.nav-open .sidebar{transform:none;box-shadow:var(--shadow)}
+  body.nav-open .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:35}
+  .main{margin-left:0}
+  .btn.menu-btn{display:inline-flex}
+  .topbar{padding:10px 16px}
+  .content{padding:18px 16px 90px}
+  .save-ind span.txt{display:none}
+  .hero{padding:20px;min-height:260px}.hero h2{font-size:34px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .stats.g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .q-prog{width:64px}
+  .q-body{padding-left:14px}
+  .region-head h3{font-size:24px}.region-num{font-size:40px}
+  .mtable thead{display:none}
+  .mtable tr{display:block;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;padding:6px}
+  .mtable td{display:block;border:0;padding:4px 8px}
+  .mtable td[data-l]::before{content:attr(data-l)": ";color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+  .page-head h2{font-size:28px}
+  .bottom-nav{display:flex}
+}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(13,14,17,.96);border-top:1px solid var(--border);justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+.bottom-nav button{background:none;border:0;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;padding:4px 6px;cursor:pointer}
+.bottom-nav button.active{color:var(--crimson)}
+.bottom-nav svg{width:20px;height:20px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">刃</div>
+      <h1>Phantom Blade Zero</h1>
+      <p>Trophy &amp; Tale Companion</p>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">Unofficial fan companion. Progress stays in this browser.</div>
+  </aside>
+  <div class="scrim" data-act="close-nav"></div>
+  <div class="main">
+    <header class="topbar">
+      <button class="btn ghost sm menu-btn" data-act="toggle-nav" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label for="search" class="sr-only">Search quests, NPCs, bosses, regions and trophies</label>
+        <input id="search" type="text" placeholder="Search quests, NPCs, bosses, trophies…" autocomplete="off">
+        <div class="results" id="results" role="listbox"></div>
+      </div>
+      <button class="btn sm" data-act="undo" id="undoBtn" title="Undo last progress change" disabled>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span>Undo</span>
+      </button>
+      <div class="save-ind" id="saveInd" aria-live="polite"><span class="dot"></span><span class="txt">Saved</span></div>
+    </header>
+    <main class="content" id="content" tabindex="-1"></main>
+  </div>
+</div>
+<nav class="bottom-nav" id="bottomNav" aria-label="Quick navigation"></nav>
+<div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal"><h3 id="modalTitle"></h3><p id="modalText"></p>
+    <div class="row"><button class="btn" id="modalCancel">Cancel</button><button class="btn primary" id="modalOk">Confirm</button></div></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+/* =========================================================
+   1. IMAGE CONFIGURATION (centralised)
+   These are official / press screenshots of Phantom Blade Zero.
+   They are used as atmosphere only — none is claimed to depict
+   a specific region unless verified.
+   ========================================================= */
+const IMAGES = [
+  { url: "https://www.gematsu.com/wp-content/uploads/2025/12/Phantom-Blade-Zero_2025_12-11-25_007.jpg", alt: "Phantom Blade Zero screenshot: a rain-soaked bridge scene", credit: "Gematsu (press screenshot)" },
+  { url: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/4115450/53cc6faf8d70d29593495b2eaffc4c08761989ce/ss_53cc6faf8d70d29593495b2eaffc4c08761989ce.jpg", alt: "Phantom Blade Zero gameplay screenshot from the Steam store page", credit: "Steam store" },
+  { url: "https://image.api.playstation.com/vulcan/ap/rnd/202512/1416/0d0cf324c8b9941095f1c1f70844159856d5c07b46abb46e.jpg", alt: "Phantom Blade Zero screenshot from the PlayStation Store", credit: "PlayStation Store" },
+  { url: "https://images.gram.pl/news/embed/rtlp20250819141836210mtih.jpg", alt: "Phantom Blade Zero screenshot of a town (reported as Pang Town)", credit: "gram.pl" },
+  { url: "https://img.3dmgame.com/uploads/images/news/20260525/1779672647_247366.jpg", alt: "Phantom Blade Zero lantern-lit gameplay screenshot", credit: "3DMGame" },
+  { url: "https://cdn.gamerbraves.com/2025/12/Phantom-Blade-0-Wishlist_Gameplay-Image-2.jpg", alt: "Phantom Blade Zero combat inside a temple", credit: "GamerBraves" }
+];
+
+/* =========================================================
+   2. STATIC GAME DATA
+   Verified against PowerPyx trophy, true-ending and side-tale
+   guides (Nov 2026). Items carried over from the original brief
+   that could not be verified are marked in their notes.
+   ========================================================= */
+const REGIONS = [
+  { id:"weeping-creek-valley", name:"Weeping Creek Valley", img:0,
+    intro:"The opening region. Several trophy tales start here, and three of them must be handled before the Crimson Forest bosses.",
+    story:["Meet Yu'er and Forge at the Outpost","Defeat Axemaster Peng Meng","Defeat The Hunt, Hunter of the Order to leave the valley"],
+    bosses:["Axemaster Peng Meng (story)","Hua, Deadly Betrothed (optional — drops access to the Flesh Lily)","The Hunt, Hunter of the Order (story)","Aberrant Three-Faced Puppet (Triple Threat trial)"],
+    npcs:["Yu'er","Shadow Warden (Valley Sha-Chi Tower Summit Bell)","Brooding Old Archer","Forge","The Captain (Outpost)"] },
+  { id:"crimson-forest", name:"Crimson Forest", img:1,
+    intro:"The first major point of no return. Most early missable tales fail when Bai Chilian falls — and Apprentice Healer fails even earlier, at Jing Ye.",
+    story:["Defeat Hua Qianxiao, the Sword Fanatic","Defeat Jing Ye, The Outlaw","Defeat Bai Chilian, Lady of the Twin Serpents"],
+    bosses:["Hua Qianxiao, the Sword Fanatic (story)","Jing Ye, The Outlaw (story — Apprentice Healer cutoff)","Bai Chilian, Lady of the Twin Serpents (story — major cutoff)"],
+    npcs:["Yu'er (Thieves' Camp Bell)","Lanlan (giant bridge near Thieves' Camp Bell)","Nimble Thief","Gentle Thief","Quick Hand Zhang (Trail of Cages)","Illusion of Inanis"] },
+  { id:"village-of-lu", name:"Village of Lu", img:2,
+    intro:"Two trophy tales — The Journey Home and Young Master Lan — must be pushed past their first objective before you step into Pangzhen.",
+    story:["Defeat Zhou Bi, The Gatekeeper","Open the locked door by the Puppet Testing Grounds Bell","Defeat Yuzan and Mu Xiaokui, Young Mistress of the Order"],
+    bosses:["Zhou Bi, The Gatekeeper","Yuzan (Great Puppet, story)","Mu Xiaokui, the Young Mistress of the Order (story)"],
+    npcs:["Old Man Gen (Old Man Gen's Hideout Bell)","Young Master Lan (Young Master Lan Hideout Bell)","Songstress Puppet","Cui (Puppet Testing Grounds Bell)","Wounded Thief","The Stately Monk"] },
+  { id:"pangzhen", name:"Pangzhen", img:3,
+    intro:"A hub town full of tale-givers around Myst's Tavern. The Green Serpent House door here leads to Mirage Estate — the main true-ending cutoff.",
+    story:["Defeat Flame, the Lion Dance Grandmaster","Defeat Blaze, Shadow Warden Captain and Chang Hong, The Thunder Spear","Gather the Serpent House items (The Four Serpent Houses)"],
+    bosses:["Flame, the Lion Dance Grandmaster (story)","Shadow Warden Cavalrybane (story)","Shadow Warden Soulclaimer (story)","Blaze, Shadow Warden Captain","Chang Hong, The Thunder Spear","Wu Xuan, The Fallen General"],
+    npcs:["Myst","Daoist Bi Di","Purple-Robed \"Wolf\" Leader","Leading Opera Actress","Fisherman","Shopkeeper Niu","Child of Insight (Pavilion of Knowledge)"] },
+  { id:"mandate-encampment", name:"Mandate Encampment", img:4,
+    intro:"Secrets of the Baishan Sect concludes here. Examine the body among the flowers before you defeat Yubi.",
+    story:["Defeat Wu Lengshuang, The Soft Sword at The Confinement Bell","Reach the Training Grounds"],
+    bosses:["Wu Lengshuang, The Soft Sword","Chief Disciple of the Seven-Stars (drops the Training Grounds Key)","Seven-Stars Formation (Training Grounds)","Corpse-Eating Xue","Yubi, No. 21 Swordfighter Puppet (Training Grounds)"],
+    npcs:["Dying NPC by the Dovecote Bell","Red, The Mysterious Swordswoman"] },
+  { id:"meigu-lake", name:"Meigu Lake", img:5,
+    intro:"Boat-driven lake region. Two Long Pillars, the second Primal Stone and several Pangzhen tale objectives live here.",
+    story:["Reach the Pangzhen Sha-Chi Tower via the docks","Defeat Shadow Warden Heartpiercer at the White Serpent House"],
+    bosses:["Blackwater Leader You Loong","Zither Maiden Yan Qiansui","The One-Eyed Archer","Zhu Yuan (Sha-Chi Tower — true-ending related)","Shadow Warden Heartpiercer (story)","Blizzard Blademaster (Phantom Illusionist Ruins, optional)","Grief-Stricken Jin"],
+    npcs:["Shadow Warden (Pangzhen Sha-Chi Tower Summit)","Quick Hand Zhang (West Dock)","Inanis"] },
+  { id:"mountain-of-imprisonment", name:"Mountain of Imprisonment", img:0,
+    intro:"A prison mountain with dialogue choices that decide whether later tales unlock. Read each decision before you answer.",
+    story:["Reach the Commander's Platform","Defeat Bi Feng, Giant Saber Commander","Open the mountain gate"],
+    bosses:["Bi Feng, Giant Saber Commander","Kui Yanyan, The Deranged","Jade-Face (summit)","Huangxing, the Kunlun Renegade (needed for Whence the Weeping and Pillars of Kunlun)","Agonized Ironmask (if you choose to fight him)"],
+    npcs:["Liu Yi (Cavern Passage Bell)","Agonized Ironmask","Wulin Fighter (Hanging Cage Cavern Bell)","Lu Sanqian"] },
+  { id:"mirage-estate", name:"Mirage Estate", img:1,
+    intro:"Entered through the door at the back of the Green Serpent House in Pangzhen. Every purple-icon tale must be finished BEFORE you go through — the game warns you, but don't rely on it.",
+    story:["Complete The Four Serpent Houses","Enter Mirage Estate","Defeat Yuding and Lei Dang, the Order's Envoy"],
+    bosses:["Yuding (Great Puppet, story)","Lei Dang, the Order's Envoy (story)"],
+    npcs:["Quick Hand Zhang (Shaded Bamboo Path)"] },
+  { id:"mount-soulrend", name:"Mount Soulrend", img:2,
+    intro:"The finale. The Last Chance Bell is your final warning — you cannot leave the final boss area until the ending plays.",
+    story:["Defeat The Saw and the Crusher","Rest at The Last Chance Bell","Defeat Meng Hua, then the true final boss"],
+    bosses:["The Saw and the Crusher (story)","Meng Hua, the Merciful Lady of the Blossom Veil (normal final boss)","True final boss (only with all purple tales done — named Leng Tu in the original brief; unverified)"],
+    npcs:["Shadow Warden (reward: Statue of the Loyal Hero)","Man across the bridge at The Last Mandate Encampment Bell (Cui)"] }
+];
+
+/* type: missable | true | trophy | optional
+   level: critical | warning | info | null */
+const QUESTS = [
+ /* ---------- WEEPING CREEK VALLEY ---------- */
+ { id:"severed-mindseal", name:"A Severed Mindseal", region:"weeping-creek-valley", also:["meigu-lake","crimson-forest"], type:"missable", level:"critical", trophy:"spectral-blade",
+   npc:"Shadow Warden — Valley Sha-Chi Tower Summit Bell",
+   trigger:"Exact fail trigger unknown. Guides advise returning the first Primal Stone before leaving Weeping Creek Valley.",
+   deadline:"Stone 1: before leaving Weeping Creek Valley",
+   todo:"Do every stage as soon as it becomes available. The tale spans three Primal Stones in three regions.",
+   objectives:[
+    "Speak to the Shadow Warden by the Valley Sha-Chi Tower Summit Bell and accept the tale",
+    "Defeat the enemy down the giant ladder near the Summit Bell to obtain the Sha-Chi Tower Furnace Inspection Crank",
+    "Use the crank on the furnace at the Valley Sha-Chi Tower 1st Floor Bell to retrieve the first Primal Stone",
+    "Return the first Primal Stone to the Shadow Warden — before leaving Weeping Creek Valley",
+    "Meigu Lake: talk to the Shadow Warden at the Pangzhen Sha-Chi Tower Summit, take the boat beneath the tower and retrieve the second Primal Stone from the furnace",
+    "Return the second Primal Stone to the Shadow Warden",
+    "Crimson Forest (once Mirage Estate is done and Mount Soulrend opens, the east side freezes): from the Burial Grounds Bell climb the new Sha-Chi Tower and talk to him",
+    "Take the elevator down, collect the final Primal Stone and return it",
+    "Confirm the tale shows as completed in the Journal"],
+   note:"The original brief listed only the first stone. PowerPyx documents three stones; all three are needed for Spectral Blade." },
+ { id:"flesh-lily", name:"Flesh Lily", region:"weeping-creek-valley", also:["crimson-forest","pangzhen"], type:"missable", level:"critical", trophy:"healers-legacy",
+   npc:"Yu'er — Outpost",
+   trigger:"Fails if the Flesh Lily isn't handed over in time. Earliest reported cutoff: defeating Bai Chilian (Crimson Forest).",
+   deadline:"Give the Flesh Lily to Yu'er before defeating Bai Chilian",
+   todo:"Defeat the optional boss Hua, grab the Flesh Lily in her arena, and hand it to Yu'er at the Outpost straight away.",
+   objectives:[
+    "Ask Yu'er how to save her father to accept the tale",
+    "Locate Hua's arena: behind the Valley Sha-Chi Tower (1st Floor Bell), slide down the hole on the right, then follow the path left to the end",
+    "Defeat Hua, Deadly Betrothed (unlocks the Scarlet Wraithblade trophy too)",
+    "Collect the Flesh Lily in her arena",
+    "Give the Flesh Lily to Yu'er at the Outpost (before Bai Chilian)",
+    "Pangzhen: after defeating Blaze, Shadow Warden Captain, pick up the Crimson Flesh Lily",
+    "Pangzhen: defeat Chang Hong, The Thunder Spear, enter Yu'er's home and use the Flesh Lily on the old man"],
+   note:"Some guides spell the boss \"Deathly Betrothed\"; the trophy calls her \"Hua, the Bride\"." },
+ { id:"apprentice-healer", name:"Apprentice Healer", region:"weeping-creek-valley", type:"missable", level:"critical", trophy:"healers-legacy",
+   npc:"Yu'er — Outpost (after defeating Peng Meng)",
+   trigger:"Confirmed: fails when Jing Ye, The Outlaw (Crimson Forest) is defeated. Some guides report earlier cutoffs: the Crane Bell (Crimson Forest) or even leaving Weeping Creek Valley.",
+   deadline:"Earliest reported: before leaving Weeping Creek Valley (confirmed cutoff: Jing Ye)",
+   todo:"Accept the tale from Yu'er FIRST, then gather the three herbs and return them.",
+   objectives:[
+    "Accept the tale from Yu'er at the Outpost (accept before picking up herbs — players report herbs gathered earlier may not register)",
+    "Collect Blood-Stopper Vine — near the Axemaster's Holding Cell Bell",
+    "Collect Congealeaf — near the door unlocked with the Rusted Loong Key",
+    "Collect Blemish Goldweed — near the Weeping Creek Valley Long Pillar",
+    "Return all three herbs to Yu'er"] },
+ { id:"purge-the-sect", name:"Purge the Sect", region:"weeping-creek-valley", type:"missable", level:"critical", trophy:null,
+   npc:"Brooding Old Archer — inside the Outpost",
+   trigger:"Fails after defeating the Crimson Forest main boss (Bai Chilian).",
+   deadline:"Before Bai Chilian", todo:"Clear the Ruthless Archer Camp and bring back the bow. Reward: Feather Bow (Phantom Edge).",
+   objectives:[
+    "Find the Brooding Old Archer inside the Outpost","Accept his request","Travel to the Ruthless Archer Camp",
+    "Defeat all the corrupted archer disciples","Obtain the Broken-String Feather Bow","Return the bow to the Old Archer"] },
+ { id:"festering-secret", name:"Festering Secret", region:"weeping-creek-valley", type:"missable", level:"critical", trophy:null,
+   npc:"Auto-accepted after talking with Forge",
+   trigger:"Fails after defeating the Crimson Forest main boss (Bai Chilian). Also gates the 5th Four Fierce Axes book.",
+   deadline:"Before Bai Chilian", todo:"Use the Dread Axe on the Outpost barricade and finish the Captain's chain of conversations.",
+   objectives:[
+    "Obtain the Dread Axe","Destroy the barricade sealing the Outpost courtyard","Defeat all enemies in the courtyard",
+    "Talk to the Captain and obtain the Captain's Orders","Talk to the man near the Long Pillar Overlook Bell",
+    "Return to the Outpost and speak to the Captain again"] },
+ { id:"four-fierce-axes", name:"Four Fierce Axes", region:"weeping-creek-valley", also:["pangzhen"], type:"missable", level:"warning", trophy:null,
+   npc:"Auto-accepted when picking up any Four Fierce Axes book",
+   trigger:"Book 5 is unobtainable if Festering Secret isn't advanced far enough before Bai Chilian.",
+   deadline:"Book 5 before Bai Chilian", todo:"Collect all 7 books, then give them to the Child of Insight in Pangzhen. Reward: Blood Oath Dagger.",
+   objectives:[
+    "Book 1 — by the tree near the Broken Puppet Valley Bell",
+    "Book 2 — inside the house by the Broken Puppet Valley Bell",
+    "Book 3 — inside a building near the Outpost Courtyard Bell",
+    "Book 4 — on a table near the Axe Master's Holding Cell Bell",
+    "Book 5 — give the Captain's Orders (Festering Secret) to the NPC near the Long Pillar Overlook Bell",
+    "Book 6 — on a table near the Valley Sha-Chi Tower Base Bell",
+    "Book 7 — from The Lady's Cave Bell exit the cave and use the Hunter's Chain Sickle on the branch",
+    "Pangzhen: climb the building right of the Pavilion of Knowledge Crossroads and give the books to the Child of Insight"] },
+ { id:"triple-threat", name:"Triple Threat", region:"weeping-creek-valley", also:["crimson-forest"], type:"optional", level:null, trophy:null,
+   npc:"Starts when entering the trial at The Lady's Rift Bell",
+   trigger:"Not missable.", deadline:"—", todo:"Finish the second fight after Crimson Forest freezes over. Reward: Freezing Chaos.",
+   objectives:[
+    "Enter the trial at The Lady's Rift Bell",
+    "Defeat the Aberrant Three-Faced Puppet and receive the Three-Headed Doll",
+    "After entering Mirage Estate, go to the Threadbound Great Tree Bell (Crimson Forest) and fight the boss again",
+    "Defeat it with the Blazing Edge (Soul Tempered Sanguine Reach) equipped for the full reward"],
+   note:"Linked to Yucong, needed for the separate trophy The Four Freed." },
+
+ /* ---------- CRIMSON FOREST ---------- */
+ { id:"healers-mercy", name:"A Healer's Mercy", region:"crimson-forest", type:"missable", level:"critical", trophy:"healers-legacy",
+   npc:"Yu'er — Thieves' Camp Bell",
+   trigger:"Fails after defeating Bai Chilian.", deadline:"Before Bai Chilian",
+   todo:"Heal all four wounded thieves, then report to Yu'er.",
+   objectives:[
+    "Accept the tale from Yu'er near the Thieves' Camp Bell",
+    "Treat thief 1 — small cave near the Outlaw Trap Bell",
+    "Treat thief 2 — larger cave near the Outlaw Trap Bell",
+    "Treat thief 3 — down the giant ladder near the Cliffside Lodge Bell",
+    "Get the Thieves' Camp Dungeon Key (under the lodge cellar near the Cliffside Lodge Bell)",
+    "Treat thief 4 — behind the locked door in the Thieves' Camp",
+    "Return to Yu'er at the Thieves' Camp Bell"] },
+ { id:"honor-among-thieves", name:"Honor Among Thieves", region:"crimson-forest", type:"missable", level:"critical", trophy:null,
+   npc:"Nimble Thief (near Outlaw Trap Bell) → Gentle Thief (near Thieves' Camp Bell)",
+   trigger:"Fails after defeating Bai Chilian.", deadline:"Before Bai Chilian",
+   todo:"Answers: \"Stole a landowner's jade belt\" · \"Butterfly\" · \"The letter never said; his fate is unknown\". Wrong answers can be retried. Reward: Silent Wrap.",
+   objectives:[
+    "Defeat the Nimble Thief near the Outlaw Trap Bell (starts the tale)",
+    "Obtain the Blood Letter",
+    "Deliver it to the Gentle Thief near the Thieves' Camp Bell",
+    "Answer his three questions correctly",
+    "Confirm the tale completes"] },
+ { id:"baishan", name:"Secrets of the Baishan Sect", region:"crimson-forest", also:["mandate-encampment"], type:"missable", level:"critical", trophy:"last-of-baishan",
+   npc:"Lanlan — giant wooden bridge near the Thieves' Camp Bell",
+   trigger:"Can't be accepted after Bai Chilian. Fails if Yubi is defeated before you examine the body in the flowers.",
+   deadline:"Accept before Bai Chilian · examine the body before Yubi",
+   todo:"Accept from Lanlan early, free the girl in the secret chamber, then in Mandate Encampment examine the body before the Training Grounds boss.",
+   objectives:[
+    "Speak to Lanlan on the giant bridge near the Thieves' Camp Bell and accept the tale",
+    "Confirm it appears in the Journal",
+    "From the Cliffside Lodge Bell, pick up the Crimson Forest Cellar Crank and unlock the cellar",
+    "Drop onto the plank between the platforms and take the Crimson Forest Secret Chamber Crank",
+    "Drop to the bottom, unlock the door and talk to the girl inside",
+    "Mandate Encampment: defeat Wu Lengshuang, The Soft Sword (The Confinement Bell)",
+    "Continue up the path and interact with the body among the flowers (Bi Taotao)",
+    "Check the Journal now asks you to defeat the puppet",
+    "Only then defeat Yubi, No. 21 Swordfighter Puppet at the Training Grounds and watch the cutscene"] },
+ { id:"quick-hand", name:"Quick Hand's Request", region:"crimson-forest", also:["village-of-lu","pangzhen","meigu-lake","mirage-estate"], type:"trophy", level:"info", trophy:"lost-and-found",
+   npc:"Quick Hand Zhang — rescue him near the Trail of Cages, then visit his hideouts",
+   trigger:"Listed as non-missable by PowerPyx, but players report a Mirage Estate treasure (Opera House) may become unreachable after the ending.",
+   deadline:"Precaution: finish Mirage Estate treasures before Mount Soulrend",
+   todo:"Find each region's treasures and hand them in at that region's hideout.",
+   objectives:[
+    "Rescue Quick Hand Zhang from his cage near the Trail of Cages Bell",
+    "Crimson Forest: Sect Leader's Snuff Bottle (large cave near Outlaw Trap Bell — needs the Tunnel Crank)",
+    "Crimson Forest: Bloodstained Seal (cave past the long wooden platform beyond Thieves' Camp Bell)",
+    "Crimson Forest: Ancient Crossbow (Thieves' Camp Dungeon) — then hand in all three",
+    "Village of Lu: Wedding Candles, Unveiled Statue, White Jade Twins — hand in",
+    "Pangzhen: Tiger Paperweight, Ink Stick, Carved-Edge Inkstone, Jade Brush Rest — hand in",
+    "Meigu Lake: Blue Blossom Compass, Blight Astrolabe, Sundial of Impermanence — hand in",
+    "Mirage Estate: General's Bronze Mirror, Gold-and-Silver Sachet (Opera House), Golden Cloud-Moon Hairpin — hand in"],
+   note:"PowerPyx's trophy page says Meigu Lake has 4 treasures; its side-tale page lists 3. Check the in-game request." },
+ { id:"wily-hare", name:"The Wily Hare's Three Dens", region:"crimson-forest", also:["village-of-lu","pangzhen","meigu-lake","mirage-estate"], type:"optional", level:null, trophy:null,
+   npc:"Quick Hand Zhang", trigger:"Not missable.", deadline:"—", todo:"Find all five of Quick Hand Zhang's hideouts.",
+   objectives:[
+    "Crimson Forest hideout (unlocked when you first meet him)",
+    "Village of Lu — from the Covered Bridge Bell, drop into the river by the barricade and follow the cave",
+    "Pangzhen — past Wu Xuan's arena from the Backstreets Archway Bell, drop into the cave",
+    "Meigu Lake — from the Meigu Village West Dock Bell, cross the beams to the island's end",
+    "Mirage Estate — from the Shaded Bamboo Path Bell, up the stairs left of the courtyard"] },
+ { id:"heart-of-banyan", name:"Heart of the Banyan", region:"crimson-forest", also:["pangzhen","mandate-encampment","meigu-lake","mountain-of-imprisonment"], type:"trophy", level:null, trophy:"even-trees",
+   npc:"Auto-accepted from the Illusion of Inanis", trigger:"Not missable.", deadline:"—",
+   todo:"Clear all five Banyan Tree wave challenges (each ends in a boss rematch; deaths resume from that wave).",
+   objectives:[
+    "Crimson Forest — drop down from the Parting Mists Bell (rematch: Jing Ye)",
+    "Pangzhen — past You Loong's arena from the Lion Dance Hall Bell (rematch: Master Bi Yuan)",
+    "Mandate Encampment — grapple up the cliff right of the Sunset Path Bell (rematch: Iron Fiend & Stone Hand)",
+    "Meigu Lake — island east of the Village of Lu Shallow Docks Bell (rematch: Cavalrybane & Soulclaimer)",
+    "Mountain of Imprisonment — across the wooden bridge past the Shrine Outer Gate (rematch: Iron Butcher & Jagged Steel)"] },
+ { id:"use-it-against-them", name:"Use It Against Them", region:"crimson-forest", type:"optional", level:null, trophy:null,
+   npc:"Jade Dancer — top of the Crimson Forest Sha-Chi Tower (after the region freezes)", trigger:"Not missable.", deadline:"—", todo:"Spar with only the Fiend Saws and Iron Gauntlets equipped.",
+   objectives:["Reach the Crimson Forest Sha-Chi Tower 6th Floor Bell after the freeze","Talk to the Jade Dancer","Equip only the Fiend Saws weapon and Iron Gauntlets phantom edge","Win the sparring match against the Jade Dancer and Iron Fiend"] },
+ { id:"heart-of-the-fist", name:"Heart of the Fist", region:"crimson-forest", type:"optional", level:null, trophy:null,
+   npc:"Iron Fiend — top of the Crimson Forest Sha-Chi Tower (after the freeze)", trigger:"Not missable.", deadline:"—", todo:"Visit the big grave at the Burial Grounds Bell.",
+   objectives:["Talk to the Iron Fiend at the top of the Sha-Chi Tower","From the Burial Grounds Bell, interact with the big grave ahead"] },
+
+ /* ---------- VILLAGE OF LU ---------- */
+ { id:"journey-home", name:"The Journey Home", region:"village-of-lu", also:["pangzhen"], type:"missable", level:"critical", trophy:"together-till-the-end",
+   npc:"Old Man Gen — Old Man Gen's Hideout Bell",
+   trigger:"Exact trigger unknown. Guides require the first objective done before entering Pangzhen.",
+   deadline:"First objective before entering Pangzhen",
+   todo:"After opening the locked door at the end of the village, go back and agree to Gen's request before moving on.",
+   objectives:[
+    "Find Old Man Gen at his hideout and accept the tale",
+    "Open the locked door by the Puppet Testing Grounds Bell (other guides describe this as clearing the Smuggler's Tunnel)",
+    "Return to Old Man Gen and agree to his request (before entering Pangzhen)",
+    "Pangzhen: at the Pong of Fading Song Bell, turn around and take the path to the right",
+    "Burn the blocking branches",
+    "Find Old Man Gen's House and open the door",
+    "Interact with the corpse inside",
+    "Return to Old Man Gen in the Village of Lu"],
+   note:"Guides differ on wording: PowerPyx names the locked door by the Puppet Testing Grounds Bell, others say the Smuggler's Tunnel. Either way, report back to Gen before you enter Pangzhen." },
+ { id:"young-master-lan", name:"Young Master Lan", region:"village-of-lu", also:["pangzhen"], type:"missable", level:"critical", trophy:"wanderers-honor",
+   npc:"Young Master Lan — Young Master Lan Hideout Bell",
+   trigger:"Exact trigger unknown. Guides require the first objective done before entering Pangzhen.",
+   deadline:"First objective before entering Pangzhen",
+   todo:"Report back to Lan after opening the village's locked door, then finish quickly in Pangzhen.",
+   objectives:[
+    "Find Young Master Lan and accept the tale",
+    "Open the locked door by the Puppet Testing Grounds Bell (other guides describe this as clearing the Smuggler's Tunnel)",
+    "Return to Young Master Lan (before entering Pangzhen)",
+    "Pangzhen: from the Pavilion of Knowledge Crossroads Bell, follow the road to trigger the encounter",
+    "Obtain the Lan Manor Key",
+    "Rest at any Bell",
+    "Return to the encounter spot and defeat the enemies",
+    "Speak to Lan again",
+    "Enter the manor and watch the cutscene"] },
+ { id:"leave-none-alive", name:"Leave None Alive", region:"village-of-lu", also:["weeping-creek-valley","crimson-forest"], type:"missable", level:"warning", trophy:null,
+   npc:"Auto-accepted in Village of Lu",
+   trigger:"The Wounded Thief dies if you progress through the Smuggler's Tunnel first. Choosing \"believe\" turns the Stately Monk to stone.",
+   deadline:"Wounded Thief: before the Smuggler's Tunnel", todo:"Recover items from the two camps and deliver them. Never choose \"believe\" with the monk.",
+   objectives:[
+    "Weeping Creek Valley: defeat the enemies at the Outpost Bell for the Prayer Beads",
+    "Crimson Forest: defeat the enemies at the Thieves' Camp Bell for the Thief's Manual",
+    "Give the Thief's Manual to the Wounded Thief near the Smuggler's Tunnel Entrance Bell (before the tunnel)",
+    "Give the Prayer Beads to The Stately Monk near the Survivors' Courtyard Bell — do NOT pick \"believe\""] },
+ { id:"young-mistress", name:"Young Mistress", region:"village-of-lu", type:"optional", level:null, trophy:null,
+   npc:"Interact with any headband", trigger:"Not missable.", deadline:"Before the Village of Lu main boss (for the bonus drops)", todo:"Touch all five headbands to unlock extra drops from the boss.",
+   objectives:["Headband on a tree past Zhou Bi's arena","Headband on a tree next to the Temple of Blue Fireflies Bell","Headband on a bridge post past the thread barrier by the Covered Bridge Bell","Headband from interacting with The Lady Grounds Bell","Headband on a bridge post next to the Beneath the Well Bell"] },
+ { id:"puppets-heart", name:"A Puppet's Wooden Heart", region:"village-of-lu", type:"optional", level:null, trophy:null,
+   npc:"Songstress Puppet — Temple of Blue Fireflies Bell", trigger:"Not missable.", deadline:"—", todo:"Deliver the letter and find Pei.",
+   objectives:["Accept from the Songstress Puppet","Give the letter to the man in the purple robe at the Survivors' Courtyard Bell","Find Pei's corpse by the campfire in the fields near the Engine Giant Remains Bell","Return to the Songstress Puppet"] },
+ { id:"dahuang", name:"Dahuang", region:"village-of-lu", also:["pangzhen"], type:"optional", level:null, trophy:null,
+   npc:"NPC in the house near the Survivors' Courtyard Bell", trigger:"Not missable.", deadline:"—", todo:"Find Dahuang in Pangzhen.",
+   objectives:["Accept from the NPC near the Survivors' Courtyard Bell","Pangzhen: from the Narrow Alley Residence 2nd Floor Bell, zipline on, climb the stone stairs and find Dahuang"] },
+ { id:"cui", name:"Cui", region:"village-of-lu", also:["mountain-of-imprisonment","mount-soulrend"], type:"optional", level:"info", trophy:null,
+   npc:"Cui — Puppet Testing Grounds Bell", trigger:"Lu Sanqian needs the Rootless Dew when you free him.", deadline:"—", todo:"Give the Rootless Dew to Lu Sanqian when freeing him.",
+   objectives:[
+    "Accept from Cui by the Puppet Testing Grounds Bell",
+    "Mountain of Imprisonment: open the cage on the scaffolding above the Iron Butcher's Camp Bell",
+    "Defeat Bi Feng, Giant Saber Commander and pick up the Rootless Dew",
+    "Open the mountain gate and talk to Lu Sanqian",
+    "Free Lu Sanqian from his cage below the Shrine Outer Gate Bell and give him the Rootless Dew",
+    "Talk to him again near The Lady's Shrine Bell",
+    "Mount Soulrend: talk to the man across the bridge from The Last Mandate Encampment Bell"],
+   note:"The brief called this decision \"Crude Radiant Heart\"; PowerPyx places it in the Cui tale." },
+
+ /* ---------- PANGZHEN ---------- */
+ { id:"sword-and-way", name:"The Sword and the Way", region:"pangzhen", type:"optional", level:null, trophy:null,
+   npc:"Daoist Bi Di — Myst's Tavern Bell", trigger:"Not missable.", deadline:"—", todo:"Find the Bronze Essence and Soul Temper the Tianxuan Bronze Sword.",
+   objectives:["Accept from Daoist Bi Di","From the Green Serpent House Bell, climb to the blacksmith's courtyard and take the Bronze Essence from the furnace","Soul Temper the Tianxuan Bronze Sword","Return to Daoist Bi Di"] },
+ { id:"undying-spirit", name:"The Undying Heroic Spirit", region:"pangzhen", also:["mandate-encampment"], type:"optional", level:"info", trophy:null,
+   npc:"Purple-Robed \"Wolf\" Leader — Myst's Tavern Bell", trigger:"Unverified: the brief mentions a Mandate masters' recovery condition to track.", deadline:"—", todo:"Beat the Chief Disciple, then the four turned NPCs that drop Memory Flowers.",
+   objectives:[
+    "Accept from the Purple-Robed \"Wolf\" Leader",
+    "Mandate Encampment: defeat the Chief Disciple of the Seven-Stars Formation (Three Towers Bell)",
+    "Return to the Wolf Leader",
+    "Defeat the turned NPC below the Pangzhen Slums and collect his Memory Flower",
+    "Defeat the turned NPC left of the Three Towers Bell (Mandate) and collect the flower",
+    "Defeat the turned NPC past the wall-run from the Path of the Baishan's Fall Bell",
+    "Defeat the turned NPC behind the large building past the Encampment Waterfall"] },
+ { id:"star-performer", name:"The Star Performer", region:"pangzhen", type:"optional", level:null, trophy:null,
+   npc:"Leading Opera Actress — Myst's Tavern Bell", trigger:"Not missable.", deadline:"—", todo:"Also yields the Tianxiang Pavilion Key needed for a Quick Hand treasure.",
+   objectives:["Accept from the Leading Opera Actress","In the alley right of Cavalrybane's arena, use the Leading Actress's Rouge at the incense","Defeat the enemies for the Tianxiang Pavilion Key","Climb the Tianxiang Pavilion and get the Tattered Dance Fan from the dancer","Return to the Leading Opera Actress"] },
+ { id:"the-cube", name:"The Cube", region:"pangzhen", also:["meigu-lake"], type:"optional", level:null, trophy:null,
+   npc:"Fisherman — Myst's Tavern Bell", trigger:"Not missable.", deadline:"—", todo:"Two fragments in Meigu Lake.",
+   objectives:["Accept from the Fisherman","Meigu Lake: fragment in the small room up the ladder from the Meigu Village East Dock Bell","Meigu Lake: fragment from the enemy by the shrine along the coast from the Blackwater Crew Deck Bell","Talk to the Fisherman, then to Myst"] },
+ { id:"brother-once-more", name:"A Brother Once More", region:"pangzhen", also:["meigu-lake"], type:"optional", level:null, trophy:null,
+   npc:"Memory Flower in Huang Manor (key from Shopkeeper Niu)", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Get the Huang Manor key from Shopkeeper Niu","Collect the Memory Flower in Huang Manor","Meigu Lake: boat south-east from the Meigu Songhouse Dock Bell and defeat Grief-Stricken Jin","Pick up the Memory Flower on the dock"] },
+ { id:"kin-against-kin", name:"Kin Against Kin", region:"pangzhen", also:["meigu-lake"], type:"optional", level:null, trophy:null,
+   npc:"Memory Flower on the stone bridge near the Lion Dance Hall Bell", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Collect the Memory Flower on the stone bridge","Meigu Lake: from the East Dock Bell go left twice and take the flower in the building"] },
+ { id:"mothers-heart", name:"A Mother's Heart", region:"pangzhen", type:"optional", level:null, trophy:null,
+   npc:"Memory Flower on the path from the Black Hill Pavilion", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Take the Backstreet Cellar Crank from the chest before the Memory Flower","Collect the Memory Flower","Open the cellar behind the Old Man Gen's House Bell","Defeat the enemy at the top of the ladder"] },
+ { id:"dont-forget-me", name:"Don't Forget Me", region:"pangzhen", also:["mountain-of-imprisonment"], type:"optional", level:null, trophy:null,
+   npc:"NPC on the bed behind the Illusory Pipa barrier by the Marketplace Bell", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Accept from the NPC on the bed","Mountain of Imprisonment: kick down the tree near the puppet below the Commander's Platform and free the man","Defeat Kui Yanyan, The Deranged and interact with the body nearby","Return to the girl near the Marketplace Bell"] },
+
+ /* ---------- MANDATE ENCAMPMENT ---------- */
+ { id:"xue-admirer", name:"Xue, Admirer of Heroes", region:"mandate-encampment", also:["pangzhen"], type:"optional", level:null, trophy:null,
+   npc:"Corpse-Eating Xue — Mass Grave Bell", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Defeat Corpse-Eating Xue near the Mass Grave Bell","Item 1 — end of the cave on the hill by Xue's arena","Item 2 — end of the river from the Tower Rear Exit Bell","Item 3 — beside the Road to the Training Grounds Bell","Pangzhen: give them to the Child of Insight at the Pavilion of Knowledge"] },
+ { id:"dark-sect", name:"Daughter of the Dark Sect", region:"mandate-encampment", type:"missable", level:"warning", trophy:null,
+   npc:"Dying NPC — Dovecote Bell",
+   trigger:"Fails if you defeat Red on your first encounter.", deadline:"First encounter with Red",
+   todo:"SPARE RED: swing across the chain instead of fighting. Not trophy- or ending-related.",
+   objectives:["Accept from the dying NPC by the Dovecote Bell","On the rooftop, do NOT defeat Red — swing across the chain so she flees","Fight the Chief Disciple of the Seven-Stars; Red joins mid-second phase","Defeat both and pick up the Memory Flower she drops"] },
+
+ /* ---------- MEIGU LAKE ---------- */
+ { id:"secrets-lake", name:"Secrets at the Heart of the Lake", region:"meigu-lake", also:["village-of-lu","mirage-estate"], type:"true", level:"critical", trophy:"forbidden-arts",
+   npc:"Starts by collecting one of Firefly's Memory Flowers in Village of Lu",
+   trigger:"Purple-icon tale. Must be finished before entering Mirage Estate.",
+   deadline:"Before entering Mirage Estate (Green Serpent House door)",
+   todo:"Follow the purple Journal entry step by step.",
+   objectives:[
+    "Start the tale by collecting one of Firefly's Memory Flowers in Village of Lu",
+    "Acolyte Mask 1: Yanru's Blazing Mask (Village of Lu)",
+    "Acolyte Mask 2: Leiting's Thunder Mask (Pangzhen)",
+    "Acolyte Mask 3: Guhe's Venom Mask (Meigu Village East Dock)",
+    "Acolyte Mask 4: Hansui's Frost Mask (Crimson Manor tale)",
+    "Crystal Puppet Eye [Yin] (The Herald's Illusion) and [Yang] (Crimson Manor)",
+    "Go to the frozen fishing village in north-west Meigu Lake and activate the Four Guardians' Mirror Bell",
+    "Use the four masks to open the passage",
+    "Continue through the Forbidden Path and defeat the Blizzard Blademaster",
+    "Use the Crystal Puppet Eyes at the red statue",
+    "Defeat the enemies in the final chamber and confirm the tale completes"],
+   note:"The original brief listed \"six Firefly Memory Flowers\" and a talk with Inanis. Guides don't support that: the six flowers belong to Allure of Vanity (Yan'er's flowers). Steps here follow KeenGamer and PowerPyx." },
+ { id:"bloodline", name:"Bloodline Awakening", region:"meigu-lake", also:["weeping-creek-valley","crimson-forest","pangzhen"], type:"true", level:"info", trophy:"phantom-and-blade",
+   npc:"Accepted on finding your first Long Pillar",
+   trigger:"Not missable, but required for the true ending before the final boss. Its final part is done after entering Mirage Estate.",
+   deadline:"Before The Last Chance Bell", todo:"All pillars are marked on the map once accepted. Fights happen in a fixed order whichever pillar you visit first.",
+   objectives:[
+    "Find a Long Pillar to start the tale",
+    "Long Pillar — Weeping Creek Valley",
+    "Long Pillar — Crimson Forest",
+    "Long Pillar — Meigu Lake East",
+    "Long Pillar — Meigu Lake, Phantom Illusionist Ruins",
+    "Long Pillar — Pangzhen",
+    "Confirm the tale completes after the fifth pillar"] },
+
+ /* ---------- MOUNTAIN OF IMPRISONMENT ---------- */
+ { id:"heros-lament", name:"Hero's Lament", region:"mountain-of-imprisonment", type:"optional", level:"info", trophy:null,
+   npc:"Liu Yi — Cavern Passage Bell (lower his cage)",
+   trigger:"Brief advises keeping Liu Yi alive (unverified).", deadline:"—", todo:"Reward: Ink Cut (Phantom Edge).",
+   objectives:["Lower Liu Yi's cage near the Cavern Passage Bell and accept","Climb the tower at the Commander's Platform Bell and take the Detached Cage Lever","Below the Shrine Outer Gate Bell, use the lever to lower the cage and take Moji's Bloodstained Sword","Return to Liu Yi (keep him alive)"] },
+ { id:"broad-saber", name:"The Broad Saber", region:"mountain-of-imprisonment", type:"optional", level:null, trophy:null,
+   npc:"Wulin Fighter — cage near the Hanging Cage Cavern Bell", trigger:"Not missable.", deadline:"—", todo:"",
+   objectives:["Accept from the caged Wulin Fighter","Defeat Bi Feng, Giant Saber Commander","Return to the Wulin Fighter"] },
+ { id:"ledger", name:"Ledger of Atonement", region:"mountain-of-imprisonment", type:"missable", level:"warning", trophy:null,
+   npc:"Agonized Ironmask — main path from the Commander's Platform (talk several times)",
+   trigger:"The follow-up tale Bai Xue is lost if you don't pick the right line.", deadline:"Final conversation",
+   todo:"Choose \"This won't absolve you of your sins\" — you'll fight him.",
+   objectives:["Talk to the Agonized Ironmask repeatedly to accept","Below the Shrine Outer Gate Bell, find his book on the cliff-facing path","Return and choose \"This won't absolve you of your sins\"","Defeat him"] },
+ { id:"bai-xue", name:"Bai Xue", region:"mountain-of-imprisonment", also:["pangzhen"], type:"missable", level:"warning", trophy:null,
+   npc:"Puppet near the Agonized Ironmask (only after the correct Ledger choice)",
+   trigger:"Never appears if Ledger of Atonement was resolved with the other dialogue.", deadline:"Depends on Ledger of Atonement", todo:"",
+   objectives:["Accept from the puppet near the Agonized Ironmask","Pangzhen: open the Backstreets door across the bridge from the Green Serpent House Bell","Collect the two Memory Flowers","Dig up the grave at the stone beneath the tree"] },
+ { id:"whence-weeping", name:"Whence the Weeping", region:"mountain-of-imprisonment", also:["weeping-creek-valley","crimson-forest","village-of-lu","pangzhen","meigu-lake","mirage-estate"], type:"true", level:"critical", trophy:"with-heart-and-blood",
+   npc:"Starts with Yu'er past The Lady's Rift Bell (Weeping Creek Valley); ends in Mountain of Imprisonment",
+   trigger:"Required for the true ending. Must be finished before entering Mirage Estate.",
+   deadline:"Shrine steps and the rest of the tale before entering Mirage Estate",
+   todo:"Long purple tale that runs alongside the story. It overlaps with Illusory Pipa and Pillars of Kunlun.",
+   objectives:[
+    "Weeping Creek Valley: past The Lady's Rift Bell, slide down the chain, find Yu'er and ask about the weeping woman",
+    "Crimson Forest: head east from the cave and ring the Crane Bell to see the Illusion of Lady Inanis",
+    "Mirrorwood Depths: break the blue portals to reveal pillars (three times), enter the open pillar and clear the enemies",
+    "Defeat Bai Chilian at the Threadbound Great Tree Bell (Resonant Strings flowers make her second phase easier)",
+    "Village of Lu: ask Jewel about the Broken Illusory Pipa",
+    "Pangzhen: break the jar behind the wine racks in the Order's tavern and show Myst the Pipa",
+    "Complete Illusory Pipa (head, backplate and strings) and get it repaired",
+    "Meigu Lake: activate the Weeping Mistgate Bell and play the Pipa at the mist barrier",
+    "Mountain of Imprisonment: defeat Iron Butcher, pass the Hanging Cage Cavern and defeat Bi Feng",
+    "Shrine step 1: from the Shrine Outer Gate Bell drop into the arena and defeat Kui Yanyan for the Missing Lift Crank",
+    "Shrine step 2: beat the three elite guards at the ravine fork for the Shrine Gate Key, then use the crank on the lift and the key on the red Shrine Outer Gate",
+    "Climb to the summit, defeat Jade-Face and activate The Lady's Shrine Bell",
+    "Defeat Huangxing in the inner building for the Flying Guillotine",
+    "Use the Flying Guillotine on the gear-wheel altar in his throne room, descend the threaded platforms and free The Chord"],
+   note:"Steps follow Game8's walkthrough. Game8 itself lists no cutoff; the Mirage Estate deadline comes from PowerPyx's true-ending list." },
+
+ /* ---------- MIRAGE ESTATE (true-ending purple tales, in recommended order) ---------- */
+ ...[
+  { id:"deep-valley", name:"Deep in the Valley", also:["weeping-creek-valley"], npc:"Panicked Mandate Disciple — Creek Valley Plains Entrance Bell (Weeping Creek Valley)",
+    objectives:["Speak with the Panicked Mandate Disciple near the Creek Valley Plains Entrance Bell",
+     "Defeat The Hunt (second encounter) at the Great Waterfall for the Hunter's Chain Sickle",
+     "Climb to the Valley Sha-Chi Tower Summit and find the glowing key on the pipes",
+     "Use the Hunter's Chain Sickle on the pipe to grab the key",
+     "Return to the Creek Valley Plains Entrance and open the outer gate (hand the Camp Key to the disciple if the Journal asks)"] },
+  { id:"illusion-inanis", name:"Illusion of Inanis", also:["crimson-forest"], npc:"Mirrorwood route, Crimson Forest",
+    objectives:["Follow the Mirrorwood path in Crimson Forest to the Illusion of Inanis","Continue toward Mirrorwood Depths","Confirm the tale shows as completed in the Journal"],
+    note:"Few guides list separate steps for this tale; it overlaps with the early part of Whence the Weeping. Meeting her also starts Heart of the Banyan." },
+  { id:"shachi-boat", name:"Sha-Chi Powered Boat", also:["pangzhen"], npc:"Pangzhen Docks",
+    objectives:["Activate the Pangzhen Docks Bell","Interact with the Sha-Chi powered boat to unlock Meigu Lake"],
+    note:"Before boarding, walk east along these docks to reach the Sha-Chi Tower for A Severed Mindseal's second stone." },
+  { id:"allure-vanity", name:"Allure of Vanity", also:["meigu-lake"], npc:"Collect one of Yan'er's Memory Flowers near Meigu Songhouse Dock",
+    objectives:["Collect the first Yan'er Memory Flower near Meigu Songhouse Dock","Use the boat to collect all six Yan'er Memory Flowers around the lake","Return to Meigu Songhouse Dock","Defeat Yan Qiansui, the Zither Maiden","Collect the Illusory Pipa Strings"] },
+  { id:"illusory-pipa", name:"Illusory Pipa", also:["village-of-lu","mandate-encampment","meigu-lake","pangzhen"], npc:"Dusk the Puppeteer drops the Pipa Head (Temple of Blue Fireflies, Village of Lu)",
+    objectives:["Head: defeat Dusk the Puppeteer in Village of Lu (found via Firefly's Memory Flowers)",
+     "Backplate: open the Training Grounds with the Chief Disciple of the Seven-Stars' key and defeat Yubi (Mandate Encampment)",
+     "Strings: defeat Yan Qiansui at Meigu Lake (Allure of Vanity)",
+     "Give all three parts to Myst at Myst's Tavern in Pangzhen and receive the Illusory Pipa Phantom Edge",
+     "Play the Pipa at the mist barrier north of Meigu Lake to enter Mountain of Imprisonment"],
+    note:"Yubi is needed here, so finish the Baishan body step first (see Secrets of the Baishan Sect)." },
+  { id:"pillars-kunlun", name:"Pillars of Kunlun", also:["pangzhen","village-of-lu","mandate-encampment","mountain-of-imprisonment"], npc:"Note \"Comments on the Pillars of Kunlun\" beside the Collapsing Mandate Disciple, at the campfire just before the Waterfall Bridge Bell",
+    objectives:["Pick up the \"Comments on the Pillars of Kunlun\" note by the Collapsing Mandate Disciple",
+     "Pangzhen (underground): defeat Gu Wanyue, then jump into the nearby well for the Outer Gate Key",
+     "Open the locked door at the Mandate Encampment Outer Gate Bell (Village of Lu)",
+     "Defeat the Seven-Stars Formation bosses in the Training Grounds",
+     "Obtain the Illusory Pipa Phantom Edge to clear the mist to Mountain of Imprisonment",
+     "Defeat Huangxing at the northern summit of Mountain of Imprisonment",
+     "Use the mechanism at the back of the area and drop down to finish"] },
+  { id:"heralds-illusion", name:"The Herald's Illusion", also:["village-of-lu","mandate-encampment","mountain-of-imprisonment"], npc:"Portal beside the Puppet Testing Grounds (Village of Lu)",
+    objectives:["Enter the portal beside the Puppet Testing Grounds (Village of Lu)","Enter the Training Grounds Depths portal (Mandate Encampment)","Enter the Puppet Cell portal (Mountain of Imprisonment)","Interact with the hanging puppet to get the Puppet's Tongue and Crystal Puppet Eye [Yin]"] },
+  { id:"crimson-manor", name:"Crimson Manor", also:["weeping-creek-valley"], npc:"Crimson Manor Bell, Weeping Creek Valley (sealed until you have the Puppet's Tongue)",
+    objectives:["Fast travel to the Crimson Manor Bell","Use the Puppet's Tongue on the mansion entrance","Explore the second-floor library","Descend through the underground passage and land on the threads in the deep chamber","Defeat The Puppet Scavenger and Acolyte Hansui in the underground arena","Collect Hansui's Frost Mask and Crystal Puppet Eye [Yang]"],
+    note:"Defeating the Puppet Scavenger also earns the trophy Nothing Goes to Waste." }
+ ].map(t => ({ region:"mirage-estate", type:"true", level:"critical", trophy:"with-heart-and-blood",
+   trigger:"Required for the true ending.",
+   deadline:"Before entering Mirage Estate via the Green Serpent House door",
+   todo:"Purple-icon tale. Its steps happen in earlier regions; it's grouped here as true-ending preparation.", ...t })),
+
+ /* ---------- MEMORY FLOWER TALES (regions not confirmed) ---------- */
+ ...[
+  ["resonant-strings","Resonant Strings","Collect the Memory Flowers of Inanis and the Chord. Finishing them before Bai Chilian makes her second phase easier."],
+  ["justice-tarnished","Justice Tarnished",""],["lion-dance-depths","Lion Dance Hall Depths",""],
+  ["seven-stars-formation","The Seven-stars Formation",""],["whiteshadow","Whiteshadow",""],["dream-motherhood","A Dream of Motherhood",""]
+ ].map(([id,name,todo]) => ({ id, name, region:null, type:"optional", level:null, trophy:null, research:true,
+   npc:"Memory Flower tale — start location to be researched", trigger:"Not reported as missable.", deadline:"—",
+   todo: todo || "Objectives to be researched — follow the Memory Flower entry in your Journal.",
+   objectives:["Collect the Memory Flowers for this tale — objectives to be researched","Confirm the tale shows as completed in the Journal"],
+   note:"Listed in Journal tale lists (allthings.how). PowerPyx covers these flowers in its collectible guide rather than its tale guide." })),
+
+ /* ---------- MOUNT SOULREND ---------- */
+ { id:"last-chance", name:"The Last Chance — Final Review", region:"mount-soulrend", type:"true", level:"critical", trophy:"with-heart-and-blood",
+   npc:"The Last Chance Bell", trigger:"Past this Bell you can't leave the final boss area until the ending.", deadline:"Before passing The Last Chance Bell",
+   todo:"Tick each line only after checking it in the in-game Journal.",
+   objectives:[
+    "Rest at The Last Chance Bell","Review the Journal for anything marked red or unfinished",
+    "Confirm Secrets at the Heart of the Lake is complete","Confirm Bloodline Awakening is complete (all five Long Pillars)",
+    "Confirm Secrets of the Baishan Sect is complete","Confirm The Journey Home is complete","Confirm Young Master Lan is complete",
+    "Confirm The Healer's Legacy tales are complete","Confirm A Severed Mindseal is complete",
+    "Confirm every remaining purple-icon tale is complete",
+    "Defeat Zhu Yuan (Meigu Lake Sha-Chi Tower) and Bi Feng (Mountain of Imprisonment) — PowerPyx lists both for the true ending"],
+   note:"One player reports getting the true ending without Bi Feng, but beating both is the safe choice — and it earns The Two Blade Masters." },
+ { id:"true-ending", name:"The True Ending", region:"mount-soulrend", type:"true", level:"critical", trophy:"with-heart-and-blood",
+   npc:"—", trigger:"Only triggers if every purple tale is complete.", deadline:"Final battle",
+   todo:"With all purple tales done, the true final boss follows Meng Hua.",
+   objectives:["Defeat The Saw and the Crusher","Defeat Meng Hua, the Merciful Lady of the Blossom Veil","Defeat the true final boss (Leng Tu per the original brief — unverified)","Watch the true ending"] }
+];
+
+const TROPHIES = [
+ { id:"spectral-blade", name:"Spectral Blade", grade:"bronze", desc:"Complete [A Severed Mindseal]", quests:["severed-mindseal"], region:"Weeping Creek Valley → Meigu Lake → Crimson Forest", missable:true, cat:"missable" },
+ { id:"healers-legacy", name:"The Healer's Legacy", grade:"bronze", desc:"Complete [Flesh Lily], [Apprentice Healer] and [A Healer's Mercy]", quests:["flesh-lily","apprentice-healer","healers-mercy"], region:"Weeping Creek Valley / Crimson Forest", missable:true, cat:"missable" },
+ { id:"last-of-baishan", name:"The Last of Baishan", grade:"bronze", desc:"Complete [Secrets of the Baishan Sect]", quests:["baishan"], region:"Crimson Forest → Mandate Encampment", missable:true, cat:"missable" },
+ { id:"together-till-the-end", name:"Together Till the End", grade:"bronze", desc:"Complete [The Journey Home]", quests:["journey-home"], region:"Village of Lu → Pangzhen", missable:true, cat:"missable" },
+ { id:"wanderers-honor", name:"A Wanderer's Honor", grade:"bronze", desc:"Complete [Young Master Lan]", quests:["young-master-lan"], region:"Village of Lu → Pangzhen", missable:true, cat:"missable" },
+ { id:"forbidden-arts", name:"Forbidden Arts Beneath the Lake", grade:"silver", desc:"Complete [Secrets at the Heart of the Lake]", quests:["secrets-lake"], region:"Village of Lu → Meigu Lake", missable:true, cat:"missable" },
+ { id:"with-heart-and-blood", name:"With Heart and Blood", grade:"gold", desc:"All Comes to Light — achieve the true ending", quests:["secrets-lake","bloodline","whence-weeping","deep-valley","illusion-inanis","shachi-boat","allure-vanity","illusory-pipa","pillars-kunlun","heralds-illusion","crimson-manor","last-chance","true-ending"], region:"Mount Soulrend", missable:true, cat:"ending" },
+ { id:"phantom-and-blade", name:"Phantom and Blade", grade:"silver", desc:"Complete [Bloodline Awakening]", quests:["bloodline"], region:"Five Long Pillars across the game", missable:false, cat:"non" },
+ { id:"lost-and-found", name:"Lost and Found", grade:"bronze", desc:"Complete all [Quick Hand's Requests]", quests:["quick-hand"], region:"Five regions", missable:false, cat:"non", note:"Officially non-missable; some players report an endgame Opera House treasure becoming unreachable." },
+ { id:"even-trees", name:"Even Trees Know Sorrow", grade:"silver", desc:"Complete [Heart of the Banyan]", quests:["heart-of-banyan"], region:"Five Banyan Trees", missable:false, cat:"non" }
+];
+
+/* Remaining trophies (PowerPyx list). Not tale-linked, so they have no quest checklist. */
+[
+ ["defy-destiny","Defy Destiny","platinum","Earn all remaining trophies","—"],
+ ["hearts-journey","The Heart's Journey","bronze","Escape the Pursuers on the Main Road (story)","Prologue"],
+ ["axes-grudge","The Axe's Grudge","bronze","Defeat Axemaster Peng Meng (story)","Weeping Creek Valley"],
+ ["scarlet-wraithblade","Scarlet Wraithblade","bronze","Defeat Hua, the Bride (optional boss)","Weeping Creek Valley","PowerPyx doesn't list it as missable; one player reports it is. Beat Hua when you fetch the Flesh Lily."],
+ ["the-hunt","The Hunt","silver","Defeat the Hunt, Hunter of the Order (story)","Weeping Creek Valley"],
+ ["thousand-cups","A Thousand Cups Drained","bronze","Defeat Hua Qianxiao, the Sword Fanatic (story)","Crimson Forest"],
+ ["shattered-mirror","The Shattered Mirror","silver","Defeat Bai Chilian (story)","Crimson Forest"],
+ ["meet-again","Will We Meet Again?","silver","Defeat Mu Xiaokui, Young Mistress of the Order (story)","Village of Lu"],
+ ["lions-spirit","The Lion's Spirit Lives On","silver","Defeat Flame, the Lion Dance Grandmaster (story)","Pangzhen"],
+ ["seven-stars","Sword Against the Seven-Stars","silver","Defeat the Chief Disciple of the Seven-Stars","Mandate Encampment"],
+ ["crossroads-blood","Crossroads of Blood","silver","Defeat Huangxing, the Kunlun Renegade","Mountain of Imprisonment"],
+ ["nothing-waste","Nothing Goes to Waste","silver","Defeat the Puppet Scavenger (Crimson Manor)","Weeping Creek Valley"],
+ ["return-to-dust","All Return to Dust","silver","Defeat Lei Dang, the Order's Envoy (story)","Mirage Estate"],
+ ["white-shadow","The White Shadow","silver","Defeat the Blizzard Blademaster (Phantom Illusionist Ruins)","Meigu Lake"],
+ ["saw-it-through","Saw It Through","silver","Defeat the Saw and the Crusher (story)","Mount Soulrend"],
+ ["dreams-end","All Dreams Must End","gold","Defeat Meng Hua (normal final boss, story)","Mount Soulrend"],
+ ["misty-waters","Master of the Misty Waters","bronze","Defeat You Loong, Yan Qiansui and the One-Eyed Archer","Meigu Lake","You Loong also appears in Pangzhen, but the Meigu Lake fight is the one that counts."],
+ ["four-freed","The Four Freed","gold","Defeat Yuzan, Yubi, Yuding and Yucong","Village of Lu · Mandate · Mirage · Crimson Forest","Yucong is the Triple Threat rematch, only possible after Crimson Forest freezes."],
+ ["two-blade-masters","The Two Blade Masters","bronze","Defeat Zhu Yuan and Commander Bi Feng","Meigu Lake · Mountain of Imprisonment"],
+ ["three-wardens","Three Wardens Fall","bronze","Defeat Shadow Wardens Cavalrybane, Soulclaimer and Heartpiercer (story)","Pangzhen · Meigu Lake"],
+ ["tempered-ten","A Tempered Ten","bronze","Soul Temper 10 weapons (via Myst)","Any"],
+ ["overwhelming-force","Overwhelming Force","bronze","Upgrade a weapon to Level 30","Any"],
+ ["every-flower","Listen to Every Flower","bronze","Complete 10 Memory Flowers","Any"],
+ ["collectors-notes","Collector's Notes","silver","Collect 30 Accessories (60+ exist)","Any"],
+ ["phantom-arsenal","Phantom Arsenal","bronze","Soul Temper 10 Phantom Edges (via Myst)","Any"],
+ ["skill-over-strength","Skill Over Strength","bronze","Upgrade a Phantom Edge to Level 30","Any"]
+].forEach(([id,name,grade,desc,region,note]) => TROPHIES.push({ id, name, grade, desc, quests:[], region, missable:false, cat:"other", note }));
+
+/* Points of no return. req: {q, o?:[objective indexes 1-based]} */
+const CHECKPOINTS = [
+ { id:"cp-leave-valley", region:"weeping-creek-valley", title:"Leaving Weeping Creek Valley", level:"critical",
+   text:"Return the first Primal Stone to the Shadow Warden. One guide also puts the Apprentice Healer deadline here — the earliest reported.", reqs:[{q:"severed-mindseal",o:[1,2,3,4]},{q:"apprentice-healer"}] },
+ { id:"cp-jing-ye", region:"crimson-forest", title:"Jing Ye, The Outlaw", level:"critical",
+   text:"Apprentice Healer fails when Jing Ye falls (some guides report an earlier cutoff at the Crane Bell).", reqs:[{q:"apprentice-healer"}] },
+ { id:"cp-bai-chilian", region:"crimson-forest", title:"Bai Chilian – Lady of the Twin Serpents", level:"critical",
+   text:"Complete all required Crimson Forest and Weeping Creek Valley tales before defeating this boss.",
+   reqs:[{q:"apprentice-healer"},{q:"flesh-lily",o:[1,2,3,4,5]},{q:"healers-mercy"},{q:"purge-the-sect"},{q:"festering-secret"},{q:"honor-among-thieves"},{q:"baishan",o:[1,2]},{q:"four-fierce-axes",o:[5]}] },
+ { id:"cp-enter-pangzhen", region:"village-of-lu", title:"Entering Pangzhen", level:"critical",
+   text:"Report back to Old Man Gen and Young Master Lan after opening the locked door.", reqs:[{q:"journey-home",o:[1,2,3]},{q:"young-master-lan",o:[1,2,3]}] },
+ { id:"cp-yubi", region:"mandate-encampment", title:"Yubi, No. 21 Swordfighter Puppet", level:"critical",
+   text:"Examine the body among the flowers after Wu Lengshuang before this fight.", reqs:[{q:"baishan",o:[1,2,3,4,5,6,7,8]}] },
+ { id:"cp-mirage", region:"mirage-estate", title:"Green Serpent House door → Mirage Estate", level:"critical",
+   text:"Finish every purple-icon tale (except Bloodline Awakening's last pillar) before going through.",
+   reqs:[{q:"deep-valley"},{q:"illusion-inanis"},{q:"shachi-boat"},{q:"allure-vanity"},{q:"illusory-pipa"},{q:"pillars-kunlun"},{q:"whence-weeping"},{q:"heralds-illusion"},{q:"crimson-manor"},{q:"secrets-lake"}] },
+ { id:"cp-last-chance", region:"mount-soulrend", title:"The Last Chance Bell", level:"critical",
+   text:"Final warning. Everything for the true ending must be complete.",
+   reqs:[{q:"bloodline"},{q:"secrets-lake"},{q:"baishan"},{q:"journey-home"},{q:"young-master-lan"},{q:"flesh-lily"},{q:"apprentice-healer"},{q:"healers-mercy"},{q:"severed-mindseal",o:[1,2,3,4,5,6]},{q:"last-chance"}] }
+];
+
+const DECISIONS = {
+ "mandate-encampment":["Daughter of the Dark Sect: spare Red on first meeting (verified)"],
+ "mountain-of-imprisonment":[
+   "Ledger of Atonement: choose \"This won't absolve you of your sins\" (verified)",
+   "Cui / Lu Sanqian: give him the Rootless Dew when freeing him (verified)",
+   "Hero's Lament: keep Liu Yi alive (from the brief — unverified)",
+   "The Undying Heroic Spirit: track the Mandate masters' recovery condition (from the brief — unverified)",
+   "Whence the Weeping: finish both Shrine steps before crossing to Mirage Estate"],
+ "village-of-lu":["Leave None Alive: never pick \"believe\" with the Stately Monk"]
+};
+
+const SOURCES = [
+ ["PowerPyx – Trophy Guide & Roadmap","https://www.powerpyx.com/phantom-blade-zero-trophy-guide-roadmap/"],
+ ["PowerPyx – All Side Quests Guide","https://www.powerpyx.com/phantom-blade-zero-all-side-quests-guide/"],
+ ["PowerPyx – True Ending Guide","https://www.powerpyx.com/phantom-blade-zero-true-ending-guide/"],
+ ["phantomblade.guide – Missable Quests","https://phantomblade.guide/guides/missable-quests/"],
+ ["thephantombladezero.wiki – Missable Side Quests","https://thephantombladezero.wiki/guides/missable-side-quests/"],
+ ["thephantombladezero.wiki – All Tales","https://thephantombladezero.wiki/guides/all-tales/"],
+ ["phantombladezerogame.org – Side Quests","https://phantombladezerogame.org/side-quests/"],
+ ["Game8 – Whence the Weeping","https://game8.co/games/Phantom-Blade-Zero/archives/634855"],
+ ["Game8 – Deep in the Valley","https://game8.co/games/Phantom-Blade-Zero/archives/636567"],
+ ["Game8 – Pillars of Kunlun","https://game8.co/games/Phantom-Blade-Zero/archives/636907"],
+ ["KeenGamer – Complete Walkthrough","https://www.keengamer.com/articles/guides/phantom-blade-zero-complete-walkthrough-all-quests/"],
+ ["allthings.how – All Tales","https://allthings.how/phantom-blade-zero-side-quests/"],
+ ["DTGRE – Missable Quests & Boss Cutoffs","https://www.dtgre.com/2026/10/phantom-blade-zero-missable-quests-boss-cutoffs.html"],
+ ["Official site (S-Game)","https://pbz.s-game.com/en-US/"],
+ ["Official media","https://pbz.s-game.com/m/en-US/"],
+ ["PlayStation Store page","https://www.playstation.com/en-us/games/phantom-blade-zero/"],
+ ["SteamDB screenshots","https://steamdb.info/app/4115450/screenshots/"]
+];
+
+/* Derived lookup tables */
+const REGION_INDEX = Object.fromEntries(REGIONS.map((r,i)=>[r.id,i]));
+const QUEST_BY_ID = Object.fromEntries(QUESTS.map(q=>[q.id,q]));
+const TROPHY_BY_ID = Object.fromEntries(TROPHIES.map(t=>[t.id,t]));
+const OBJ_IDS = new Set(); QUESTS.forEach(q=>q.objectives.forEach((_,i)=>OBJ_IDS.add(objId(q,i))));
+function objId(q,i){ return q.id+"-"+(i+1); }
+function regionName(id){ const r=REGIONS[REGION_INDEX[id]]; return r ? r.name : "Region to be researched"; }
+function regionOrder(id){ const i=REGION_INDEX[id]; return i===undefined ? 99 : i; }
+
+/* =========================================================
+   3. PLAYER PROGRESS + LOCALSTORAGE
+   ========================================================= */
+const STORAGE_KEY = "phantomBladeZeroProgress";
+const VERSION_KEY = "phantomBladeZeroVersion";
+const SCHEMA_VERSION = 2;
+
+function defaultSettings(){ return { showCompleted:true, density:"comfortable", warnings:true, artwork:true, expanded:{}, collapsedRegions:{}, filter:"all" }; }
+function defaultJournal(){ return { location:"", npc:"", bosses:"", discoveries:"", remember:"", notes:[] }; }
+function defaultProgress(){
+  return { version:SCHEMA_VERSION, completedRegions:{}, completedQuests:{}, completedObjectives:{}, completedTrophies:{},
+    currentRegion:REGIONS[0].id, currentCheckpoint:null, journalEntries:defaultJournal(), settings:defaultSettings(), lastUpdated:null };
+}
+
+let P = defaultProgress();
+let storageOK = true;
+let storageMsg = "";
+const undoStack = [];
+
+function storageAvailable(){
+  try{ const k="__pbz_test__"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return true; }catch(e){ return false; }
+}
+const isObj = v => v && typeof v==="object" && !Array.isArray(v);
+function cleanMap(src, validSet){
+  const out = {}; if(!isObj(src)) return out;
+  for(const k in src){ if(src[k]===true && (!validSet || validSet.has(k))) out[k]=true; }
+  return out;
+}
+function str(v, max=4000){ return typeof v==="string" ? v.slice(0,max) : ""; }
+
+/* Migrations: add a function per schema bump, e.g. 1 -> 2 */
+const MIGRATIONS = {
+  // v1 -> v2: these tales' objective lists were rewritten after verification, so old ticks no longer line up.
+  1: data => {
+    const changed=["secrets-lake","whence-weeping","deep-valley","illusion-inanis","shachi-boat","allure-vanity","illusory-pipa","pillars-kunlun","heralds-illusion","crimson-manor"];
+    if(isObj(data.completedObjectives)) for(const k of Object.keys(data.completedObjectives)) if(changed.some(c=>k.startsWith(c+"-"))) delete data.completedObjectives[k];
+    data.version = 2; return data;
+  },
+  // 1: data => { /* transform v1 into v2 */ data.version = 2; return data; }
+};
+function migrate(data){
+  let v = Number(data.version)||1;
+  while(v < SCHEMA_VERSION && MIGRATIONS[v]){ data = MIGRATIONS[v](data); v = Number(data.version); }
+  data.version = SCHEMA_VERSION;
+  return data;
+}
+
+function sanitize(raw){
+  const d = defaultProgress();
+  d.completedRegions = cleanMap(raw.completedRegions, new Set(REGIONS.map(r=>r.id)));
+  d.completedQuests = cleanMap(raw.completedQuests, new Set(QUESTS.map(q=>q.id)));
+  d.completedObjectives = cleanMap(raw.completedObjectives, OBJ_IDS);
+  d.completedTrophies = cleanMap(raw.completedTrophies, new Set(TROPHIES.map(t=>t.id)));
+  if(REGION_INDEX[raw.currentRegion]!==undefined) d.currentRegion = raw.currentRegion;
+  if(CHECKPOINTS.some(c=>c.id===raw.currentCheckpoint)) d.currentCheckpoint = raw.currentCheckpoint;
+  const j = isObj(raw.journalEntries) ? raw.journalEntries : {};
+  d.journalEntries = { location:str(j.location), npc:str(j.npc), bosses:str(j.bosses), discoveries:str(j.discoveries), remember:str(j.remember),
+    notes: Array.isArray(j.notes) ? j.notes.filter(n=>isObj(n)&&typeof n.text==="string").slice(0,500).map(n=>({id:str(n.id,40)||uid(), text:str(n.text), at:str(n.at,40)})) : [] };
+  const s = isObj(raw.settings) ? raw.settings : {}; const ds = defaultSettings();
+  d.settings = {
+    showCompleted: typeof s.showCompleted==="boolean" ? s.showCompleted : ds.showCompleted,
+    density: s.density==="compact" ? "compact" : "comfortable",
+    warnings: typeof s.warnings==="boolean" ? s.warnings : ds.warnings,
+    artwork: typeof s.artwork==="boolean" ? s.artwork : ds.artwork,
+    expanded: cleanMap(s.expanded, new Set(QUESTS.map(q=>q.id))),
+    collapsedRegions: cleanMap(s.collapsedRegions, new Set(REGIONS.map(r=>r.id))),
+    filter: ["all","incomplete","completed","missable","trophy","optional","critical"].includes(s.filter) ? s.filter : "all"
+  };
+  d.lastUpdated = str(raw.lastUpdated,40) || null;
+  return d;
+}
+
+function loadProgress(){
+  storageOK = storageAvailable();
+  if(!storageOK){ storageMsg = "Browser storage is unavailable (private mode or blocked). Progress will NOT persist after you close this tab."; return; }
+  let raw;
+  try{ raw = localStorage.getItem(STORAGE_KEY); }catch(e){ storageOK=false; storageMsg="Browser storage could not be read."; return; }
+  if(!raw) return; // fresh start
+  let parsed;
+  try{ parsed = JSON.parse(raw); }catch(e){
+    try{ localStorage.setItem(STORAGE_KEY+"_corruptBackup", raw); }catch(_){}
+    storageMsg = "Saved progress was damaged and couldn't be read. A backup copy was kept and a fresh checklist started.";
+    return;
+  }
+  if(!isObj(parsed)){ storageMsg = "Saved progress had an unexpected format; starting fresh."; return; }
+  const v = Number(parsed.version)||1;
+  if(v > SCHEMA_VERSION){
+    try{ localStorage.setItem(STORAGE_KEY+"_backup_v"+v, raw); }catch(_){}
+    storageMsg = "Progress was saved by a newer version of this companion. A backup was kept before loading.";
+  }
+  P = sanitize(migrate(parsed));
+}
+
+function isValidProgress(d){
+  return isObj(d) && isObj(d.completedObjectives) && isObj(d.completedQuests) && isObj(d.completedTrophies) &&
+    isObj(d.completedRegions) && typeof d.currentRegion==="string" && isObj(d.settings) && isObj(d.journalEntries);
+}
+
+let saveTimer = null;
+function saveProgress(){
+  clearTimeout(saveTimer); saveTimer=null;
+  if(!storageOK){ setIndicator("err","Not saved"); return; }
+  if(!isValidProgress(P)){ setIndicator("err","Save blocked"); console.error("Refused to save invalid progress state"); return; }
+  P.lastUpdated = new Date().toISOString();
+  const data = { version:SCHEMA_VERSION, completedRegions:P.completedRegions, completedQuests:P.completedQuests,
+    completedObjectives:P.completedObjectives, completedTrophies:P.completedTrophies, currentRegion:P.currentRegion,
+    currentCheckpoint:P.currentCheckpoint, journalEntries:P.journalEntries, settings:P.settings, lastUpdated:P.lastUpdated };
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(VERSION_KEY, String(SCHEMA_VERSION));
+    setIndicator("ok","Saved");
+  }catch(err){
+    setIndicator("err","Save failed");
+    console.error("Progress could not be saved:", err);
+  }
+}
+function saveSoon(ms=350){ setIndicator("pending","Saving…"); clearTimeout(saveTimer); saveTimer=setTimeout(saveProgress, ms); }
+window.addEventListener("pagehide", ()=>{ if(saveTimer) saveProgress(); });
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="hidden" && saveTimer) saveProgress(); });
+
+function setIndicator(state, text){
+  const el = document.getElementById("saveInd"); if(!el) return;
+  el.classList.toggle("err", state==="err"); el.classList.toggle("pending", state==="pending");
+  el.querySelector(".txt").textContent = text;
+  el.title = P.lastUpdated ? "Last saved " + new Date(P.lastUpdated).toLocaleString() : text;
+}
+
+/* Undo (progress only, not journal text) */
+function snapshot(){ return JSON.stringify({o:P.completedObjectives,q:P.completedQuests,t:P.completedTrophies,r:P.completedRegions,cr:P.currentRegion,cc:P.currentCheckpoint}); }
+function pushUndo(){ undoStack.push(snapshot()); if(undoStack.length>40) undoStack.shift(); updateUndo(); }
+function undo(){
+  const s = undoStack.pop(); if(!s) return;
+  const d = JSON.parse(s);
+  P.completedObjectives=d.o; P.completedQuests=d.q; P.completedTrophies=d.t; P.completedRegions=d.r; P.currentRegion=d.cr; P.currentCheckpoint=d.cc;
+  saveProgress(); render(); toast("Last change undone"); updateUndo();
+}
+function updateUndo(){ const b=document.getElementById("undoBtn"); if(b) b.disabled = undoStack.length===0; }
+
+/* =========================================================
+   4. PROGRESS CALCULATIONS
+   ========================================================= */
+function objDone(q,i){ return !!(P.completedObjectives[objId(q,i)] || P.completedQuests[q.id]); }
+function questDoneCount(q){ let n=0; q.objectives.forEach((_,i)=>{ if(objDone(q,i)) n++; }); return n; }
+function questPct(q){ return q.objectives.length ? Math.round(questDoneCount(q)/q.objectives.length*100) : 0; }
+function questDone(q){ return !!P.completedQuests[q.id] || (q.objectives.length>0 && questDoneCount(q)===q.objectives.length); }
+function regionQuests(r){ return QUESTS.filter(q=>q.region===r.id); }
+function regionPct(r){ const qs=regionQuests(r); if(!qs.length) return 0; if(P.completedRegions[r.id]) return 100; return Math.round(qs.filter(questDone).length/qs.length*100); }
+function regionDone(r){ const qs=regionQuests(r); return !!P.completedRegions[r.id] || (qs.length>0 && qs.every(questDone)); }
+function overallStats(){
+  let tot=0, done=0;
+  QUESTS.forEach(q=>q.objectives.forEach((_,i)=>{ tot++; if(objDone(q,i)) done++; }));
+  return { tot, done, pct: tot ? Math.round(done/tot*100) : 0 };
+}
+function reqMet(req){ const q=QUEST_BY_ID[req.q]; if(!q) return true; if(questDone(q)) return true; if(req.o) return req.o.every(n=>objDone(q,n-1)); return false; }
+function cpUnmet(cp){ return cp.reqs.filter(r=>!reqMet(r)); }
+function nextCheckpoint(){
+  if(P.currentCheckpoint){ const c=CHECKPOINTS.find(c=>c.id===P.currentCheckpoint); if(c) return c; }
+  const ri = REGION_INDEX[P.currentRegion];
+  return CHECKPOINTS.find(c=>REGION_INDEX[c.region]>=ri && cpUnmet(c).length) || CHECKPOINTS.find(c=>REGION_INDEX[c.region]>=ri) || CHECKPOINTS[CHECKPOINTS.length-1];
+}
+function trophyReady(t){ return t.quests.length>0 && t.quests.every(id=>questDone(QUEST_BY_ID[id])); }
+
+/* =========================================================
+   5. RENDERING HELPERS
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function bar(p, cls=""){ return `<div class="bar ${cls}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${p}"><i style="width:${p}%"></i></div>`; }
+function media(idx, alt, cls, inner){
+  const im = IMAGES[idx % IMAGES.length];
+  return `<div class="media ${cls}"><img src="${esc(im.url)}" alt="${esc(alt||im.alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentNode.classList.add('img-failed');this.remove();"><div class="over">${inner}</div></div>`;
+}
+const LEVEL_LABEL = { critical:"Critical", warning:"Warning", info:"Information" };
+function levelBadge(l){ return l ? `<span class="badge ${l}">${LEVEL_LABEL[l]}</span>` : ""; }
+function trophySvg(){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M9 20h6M10 17h4"/></svg>`; }
+const ICONS = {
+ overview:'<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
+ story:'<path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 8h8M8 12h6"/>',
+ regions:'<path d="M3 20l6-14 4 8 3-5 5 11z"/>',
+ missable:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.5"/>',
+ trophies:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M12 13v4M9 20h6"/>',
+ optional:'<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/>',
+ journal:'<path d="M5 3h11l3 3v15H5z"/><path d="M9 9h6M9 13h6M9 17h4"/>',
+ settings:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>'
+};
+const PAGES = [
+ ["overview","Overview"],["story","Story Progress"],["regions","Region Guide"],["missable","Missable Quests"],
+ ["trophies","Trophy Collection"],["optional","Optional Side Quests"],["journal","Game Journal"],["settings","Settings"]
+];
+function icon(k){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ICONS[k]}</svg>`; }
+
+let page = "overview";
+
+function renderNav(){
+  const outstanding = QUESTS.filter(q=>q.type==="missable" && !questDone(q)).length;
+  $("#nav").innerHTML = PAGES.map(([k,l])=>`<button data-act="nav" data-page="${k}" class="${page===k?"active":""}" ${page===k?'aria-current="page"':""}>${icon(k)}<span>${l}</span>${k==="missable"&&outstanding?`<span class="count">${outstanding}</span>`:""}</button>`).join("");
+  const quick = ["overview","regions","missable","trophies","journal"];
+  $("#bottomNav").innerHTML = quick.map(k=>{ const l=PAGES.find(p=>p[0]===k)[1].split(" ")[0]; return `<button data-act="nav" data-page="${k}" class="${page===k?"active":""}">${icon(k)}<span>${l}</span></button>`; }).join("");
+}
+
+function applyBodyClasses(){
+  document.body.classList.toggle("compact", P.settings.density==="compact");
+  document.body.classList.toggle("no-art", !P.settings.artwork);
+}
+
+function render(){
+  applyBodyClasses(); renderNav();
+  const pages = { overview:pOverview, story:pStory, regions:pRegions, missable:pMissable, trophies:pTrophies, optional:pOptional, journal:pJournal, settings:pSettings };
+  const html = (storageMsg ? `<div class="alert warn storage-warn" role="alert"><div><div class="k">STORAGE NOTICE</div><div>${esc(storageMsg)}</div></div></div>` : "") + checkpointBanner() + (pages[page]||pOverview)();
+  $("#content").innerHTML = html;
+  updateUndo();
+}
+
+function checkpointBanner(){
+  if(!P.settings.warnings || page==="settings" || page==="journal") return "";
+  const cp = nextCheckpoint(); if(!cp) return "";
+  const unmet = cpUnmet(cp);
+  if(!unmet.length || REGION_INDEX[cp.region] > REGION_INDEX[P.currentRegion]) return "";
+  return `<div class="alert banner" role="alert"><svg class="alert-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${ICONS.missable}</svg>
+   <div style="flex:1"><div class="k">WARNING – YOU ARE APPROACHING A STORY CHECKPOINT</div>
+   <div>You have <b>${unmet.length}</b> incomplete ${unmet.length===1?"requirement":"requirements"} before <b>${esc(cp.title)}</b>. Do not proceed until you review these objectives.</div></div>
+   <button class="btn sm primary" data-act="goto-cp" data-cp="${cp.id}">Review</button></div>`;
+}
+
+/* ---------- Quest card ---------- */
+function questCard(q, opts={}){
+  const done = questDone(q), pct = questPct(q), open = !!P.settings.expanded[q.id];
+  const t = q.trophy ? TROPHY_BY_ID[q.trophy] : null;
+  const badges = [
+    levelBadge(q.level),
+    q.type==="missable" ? `<span class="badge critical">Missable</span>` : "",
+    q.type==="true" ? `<span class="badge true">True ending</span>` : "",
+    t ? `<span class="badge trophy">🏆 ${esc(t.name)}</span>` : "",
+    q.type==="optional" ? `<span class="badge opt">Optional</span>` : "",
+    opts.showRegion ? `<span class="badge">${esc(regionName(q.region))}</span>` : "",
+    done ? `<span class="badge ok">${P.completedQuests[q.id] && questDoneCount(q)<q.objectives.length ? "Marked complete" : "Complete"}</span>` : ""
+  ].join("");
+  const objs = q.objectives.map((o,i)=>{ const id=objId(q,i), d=objDone(q,i);
+    return `<li class="${d?"done":""}"><span class="num">${i+1}</span><input type="checkbox" class="cb" id="o-${id}" data-chg="obj" data-q="${q.id}" data-i="${i}" ${d?"checked":""}><label for="o-${id}" class="${/to be researched/i.test(o)?"research":""}">${esc(o)}</label></li>`; }).join("");
+  return `<article class="quest ${open?"open":""} ${done?"done":""} ${q.level?"lvl-"+q.level:""}" id="quest-${q.id}">
+   <div class="q-head">
+    <input type="checkbox" class="cb" data-chg="quest" data-q="${q.id}" ${done?"checked":""} aria-label="Mark ${esc(q.name)} complete">
+    <button class="q-title" data-act="toggle-quest" data-q="${q.id}" aria-expanded="${open}"><h4>${esc(q.name)}</h4><div class="badges">${badges}</div></button>
+    <div class="q-prog"><div class="pct">${pct}%</div>${bar(pct, done?"good":"")}</div>
+    <button class="chev" data-act="toggle-quest" data-q="${q.id}" aria-label="Expand ${esc(q.name)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+   </div>
+   <div class="q-body">
+    <dl class="q-meta">
+     <div><dt>Region</dt><dd>${esc(regionName(q.region))}${q.also?` <span class="muted">(also ${q.also.map(a=>esc(regionName(a))).join(", ")})</span>`:""}</dd></div>
+     <div><dt>NPC / Start</dt><dd>${esc(q.npc)}</dd></div>
+     <div><dt>Deadline</dt><dd>${esc(q.deadline)}</dd></div>
+     <div><dt>Failure trigger</dt><dd>${esc(q.trigger)}</dd></div>
+     ${q.todo?`<div><dt>What to do</dt><dd>${esc(q.todo)}</dd></div>`:""}
+     ${t?`<div><dt>Trophy</dt><dd><button class="linkish" data-act="goto-trophy" data-t="${t.id}">${esc(t.name)}</button> <span class="muted">(${t.grade})</span></dd></div>`:""}
+    </dl>
+    ${q.note?`<div class="note">${esc(q.note)}</div>`:""}
+    <ol class="objs">${objs}</ol>
+    <div class="q-actions">
+     <button class="btn sm" data-act="quest-all" data-q="${q.id}">Mark all objectives</button>
+     <button class="btn sm danger" data-act="quest-reset" data-q="${q.id}">Reset tale</button>
+    </div>
+   </div></article>`;
+}
+
+function passesFilter(q, f){
+  const d = questDone(q);
+  switch(f){
+    case "incomplete": return !d;
+    case "completed": return d;
+    case "missable": return q.type==="missable" || (q.level==="critical" && q.type!=="optional");
+    case "trophy": return !!q.trophy;
+    case "optional": return q.type==="optional";
+    case "critical": return q.level==="critical";
+    default: return true;
+  }
+}
+function visible(q, f){ if(!passesFilter(q,f)) return false; if(!P.settings.showCompleted && f!=="completed" && questDone(q)) return false; return true; }
+function filterBar(){
+  const fs=[["all","All quests"],["incomplete","Incomplete"],["completed","Completed"],["missable","Missable"],["trophy","Trophy-related"],["optional","Optional"],["critical","Critical warnings"]];
+  return `<div class="chips" role="group" aria-label="Filter quests">${fs.map(([k,l])=>`<button class="chip ${P.settings.filter===k?"on":""}" data-act="filter" data-f="${k}" aria-pressed="${P.settings.filter===k}">${l}</button>`).join("")}</div>`;
+}
+
+/* ---------- Pages ---------- */
+function pOverview(){
+  const st = overallStats(), cur = REGIONS[REGION_INDEX[P.currentRegion]], cp = nextCheckpoint();
+  const regionsDone = REGIONS.filter(regionDone).length;
+  const side = QUESTS.filter(q=>q.type!=="true"), sideDone = side.filter(questDone).length;
+  const mT = TROPHIES.filter(t=>t.missable), mTDone = mT.filter(t=>P.completedTrophies[t.id]).length;
+  const mQ = QUESTS.filter(q=>q.type==="missable"), mQOut = mQ.filter(q=>!questDone(q)).length;
+  const tDone = TROPHIES.filter(t=>P.completedTrophies[t.id]).length;
+  const tPct = Math.round(tDone/TROPHIES.length*100), sPct = side.length?Math.round(sideDone/side.length*100):0;
+  const unmet = cp ? cpUnmet(cp) : [];
+  const hero = media(0, IMAGES[0].alt, "hero", `
+     <div style="flex:1;min-width:260px">
+      <h2>Phantom Blade Zero</h2><div class="sub">The Lone Wolf's Path</div>
+      <div class="meta"><div>Current region<b>${esc(cur.name)}</b></div><div>Next checkpoint<b>${cp?esc(cp.title):"—"}</b></div><div>Objectives<b>${st.done} / ${st.tot}</b></div></div>
+     </div>
+     <div class="ring" style="--p:${st.pct}" aria-label="Overall completion ${st.pct}%"><div>${st.pct}%<small>Complete</small></div></div>`);
+  const stats = [["Total regions",REGIONS.length],["Completed regions",regionsDone],["Side quests done",sideDone],["Side quests left",side.length-sideDone],["Missable trophies secured",`${mTDone}/${mT.length}`],["Missable quests outstanding",mQOut]];
+  return `${hero}
+   <div class="grid g3 stats" style="margin-top:16px">${stats.map(([l,n])=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("")}</div>
+   ${cp?`<div class="alert ${unmet.length?"":"okay"}" style="margin-top:18px"><svg class="alert-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${ICONS.missable}</svg>
+     <div style="flex:1"><div class="k">NEXT POINT OF NO RETURN</div><h3>${esc(cp.title)}</h3><div class="dim">${esc(cp.text)}</div>
+     <div style="margin-top:6px">${unmet.length?`<b style="color:#f2b4b4">${unmet.length} requirement${unmet.length>1?"s":""} still open.</b>`:`<b style="color:#9cc6ab">All tracked requirements are ticked.</b>`}</div></div>
+     <button class="btn primary" data-act="goto-cp" data-cp="${cp.id}">Open checklist</button></div>`:""}
+   <div class="section-title"><h2>Progress</h2><div class="line"></div></div>
+   <div class="grid g3">
+    <div class="card"><div class="toggle-row" style="justify-content:space-between"><b>Overall completion</b><span class="pct">${st.pct}%</span></div>${bar(st.pct)}</div>
+    <div class="card"><div class="toggle-row" style="justify-content:space-between"><b>Trophies (${tDone}/${TROPHIES.length})</b><span class="pct">${tPct}%</span></div>${bar(tPct,"gold")}</div>
+    <div class="card"><div class="toggle-row" style="justify-content:space-between"><b>Side quests</b><span class="pct">${sPct}%</span></div>${bar(sPct,"good")}</div>
+   </div>
+   <div class="section-title"><h2>Regions</h2><div class="line"></div></div>
+   <div class="grid g3">${REGIONS.map((r,i)=>{const p=regionPct(r);return `<button class="card" style="text-align:left;cursor:pointer" data-act="goto-region" data-r="${r.id}"><div class="toggle-row" style="justify-content:space-between"><span><span class="muted">${String(i+1).padStart(2,"0")}</span> <b>${esc(r.name)}</b></span>${r.id===P.currentRegion?'<span class="badge critical">Current</span>':regionDone(r)?'<span class="badge ok">Done</span>':""}</div><div style="margin-top:8px">${bar(p,p===100?"good":"")}</div><div class="pct" style="margin-top:4px">${p}% of tales</div></button>`;}).join("")}</div>
+   <p class="quote">"Every step matters. Every secret has a price. Leave no unfinished tale behind."</p>`;
+}
+
+function pStory(){
+  return `<div class="page-head"><h2>Story Progress</h2><p>Set where you are in your own game. Nothing is ever marked failed automatically — you record what happens in-game.</p></div>
+   <div class="card" style="margin-bottom:18px"><div class="toggle-row"><label for="curRegion"><b>Current region</b></label>
+    <select id="curRegion" data-chg="cur-region">${REGIONS.map((r,i)=>`<option value="${r.id}" ${r.id===P.currentRegion?"selected":""}>${i+1}. ${esc(r.name)}</option>`).join("")}</select>
+    <label for="curCp" style="margin-left:8px"><b>Next checkpoint</b></label>
+    <select id="curCp" data-chg="cur-cp"><option value="">Automatic</option>${CHECKPOINTS.map(c=>`<option value="${c.id}" ${c.id===P.currentCheckpoint?"selected":""}>${esc(c.title)}</option>`).join("")}</select></div>
+    <p class="muted" style="margin:10px 0 0;font-size:13px">Region order follows PowerPyx (Village of Lu and Pangzhen come before Mandate Encampment).</p></div>
+   <div class="grid g2">
+    <div><div class="section-title" style="margin-top:0"><h2>Chronological path</h2><div class="line"></div></div>
+     <div class="timeline">${REGIONS.map((r,i)=>{const p=regionPct(r), cur=r.id===P.currentRegion, d=regionDone(r);
+       const cps=CHECKPOINTS.filter(c=>c.region===r.id);
+       return `<div class="tl-item ${cur?"current":""} ${d?"complete":""}"><div class="card">
+         <div style="flex:1;min-width:180px"><div class="muted" style="font-size:12px">Region ${i+1}</div><h4>${esc(r.name)}</h4>
+         <ul style="margin:6px 0;padding-left:18px;font-size:13px;color:var(--text2)">${r.story.map(s=>`<li>${esc(s)}</li>`).join("")}</ul>
+         ${cps.map(c=>{const u=cpUnmet(c).length;return `<div class="cp"><span class="ico" style="color:${u?"var(--crimson)":"var(--success)"}">${u?"⚠":"✓"}</span><button class="linkish" data-act="goto-cp" data-cp="${c.id}">${esc(c.title)}</button>${u?`<span class="muted">· ${u} open</span>`:""}</div>`;}).join("")}
+         <div style="margin-top:8px">${bar(p,p===100?"good":"")}</div></div>
+         <div style="display:flex;flex-direction:column;gap:6px">${cur?'<span class="badge critical">You are here</span>':`<button class="btn sm" data-act="set-region" data-r="${r.id}">Set current</button>`}
+          <button class="btn sm ghost" data-act="goto-region" data-r="${r.id}">Open guide</button></div>
+       </div></div>`;}).join("")}</div></div>
+    <div><div class="section-title" style="margin-top:0"><h2>Points of no return</h2><div class="line"></div></div>
+     ${CHECKPOINTS.map(c=>{const u=cpUnmet(c);return `<div class="card" id="cp-${c.id}" style="margin-bottom:12px">
+       <div class="toggle-row" style="justify-content:space-between"><div><div class="muted" style="font-size:12px">${esc(REGIONS[REGION_INDEX[c.region]].name)}</div><h4 style="font-size:20px">${esc(c.title)}</h4></div>${u.length?levelBadge(c.level):'<span class="badge ok">Ready</span>'}</div>
+       <p class="dim" style="margin:6px 0;font-size:13px">${esc(c.text)}</p>
+       <ul class="req-list">${c.reqs.map(r=>{const q=QUEST_BY_ID[r.q],ok=reqMet(r);return `<li><span class="${ok?"ok":"no"}">${ok?"✓":"✕"}</span><button class="linkish" data-act="goto-quest" data-q="${q.id}">${esc(q.name)}</button>${r.o?`<span class="muted" style="font-size:12px">· objectives ${r.o.join(", ")}</span>`:""}</li>`;}).join("")}</ul></div>`;}).join("")}
+    </div></div>`;
+}
+
+function pRegions(){
+  const f = P.settings.filter;
+  return `<div class="page-head"><h2>Region Guide</h2><p>Every tale, in chronological order. Tick objectives as you go — progress saves instantly.</p></div>
+   <div class="card" style="margin-bottom:16px;display:flex;flex-direction:column;gap:12px">${filterBar()}
+    <div class="toggle-row"><span class="muted" style="font-size:13px">Jump to:</span>${REGIONS.map((r,i)=>`<button class="chip" data-act="goto-region" data-r="${r.id}">${i+1}. ${esc(r.name)}</button>`).join("")}</div></div>
+   ${REGIONS.map((r,i)=>regionSection(r,i,f)).join("")}`;
+}
+
+function regionSection(r, i, f){
+  const qs = regionQuests(r).filter(q=>visible(q,f));
+  const refs = QUESTS.filter(q=>q.region!==r.id && (q.also||[]).includes(r.id) && visible(q,f));
+  const p = regionPct(r), collapsed = !!P.settings.collapsedRegions[r.id];
+  const cps = CHECKPOINTS.filter(c=>c.region===r.id);
+  const missWarn = regionQuests(r).filter(q=>q.type==="missable" && !questDone(q));
+  const trophies = [...new Set(regionQuests(r).map(q=>q.trophy).filter(Boolean))].map(id=>TROPHY_BY_ID[id]);
+  const head = media(r.img, `${IMAGES[r.img].alt} (atmosphere image, not necessarily ${r.name})`, "region-head", `
+     <div class="region-num">${String(i+1).padStart(2,"0")}</div>
+     <div style="flex:1;min-width:200px"><h3>${esc(r.name)}</h3><div class="dim" style="font-size:14px;max-width:640px">${esc(r.intro)}</div></div>
+     <div style="width:180px"><div class="pct">${p}% · ${regionQuests(r).filter(questDone).length}/${regionQuests(r).length} tales</div>${bar(p,p===100?"good":"")}</div>`);
+  return `<section class="region ${collapsed?"collapsed":""}" id="region-${r.id}" aria-label="${esc(r.name)}">
+   <div data-act="toggle-region" data-r="${r.id}" role="button" tabindex="0" aria-expanded="${!collapsed}">${head}</div>
+   <div class="region-body">
+    <div class="toggle-row" style="margin-bottom:14px">
+     <label class="toggle-row" style="cursor:pointer"><input type="checkbox" class="cb" data-chg="region" data-r="${r.id}" ${regionDone(r)?"checked":""}> <span>Region complete</span></label>
+     ${r.id!==P.currentRegion?`<button class="btn sm" data-act="set-region" data-r="${r.id}">Set as current region</button>`:'<span class="badge critical">Current region</span>'}
+     <button class="btn sm danger" data-act="reset-region" data-r="${r.id}">Reset region</button>
+    </div>
+    <div class="info-grid">
+     <div class="card"><h4>Story progression</h4><ul>${r.story.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
+     <div class="card"><h4>Boss checkpoints</h4><ul>${r.bosses.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
+     <div class="card"><h4>NPCs</h4><ul>${r.npcs.map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>
+     ${trophies.length?`<div class="card"><h4>Trophy connections</h4><ul>${trophies.map(t=>`<li><button class="linkish" data-act="goto-trophy" data-t="${t.id}">${esc(t.name)}</button> <span class="muted">(${t.grade})</span></li>`).join("")}</ul></div>`:""}
+     ${DECISIONS[r.id]?`<div class="card"><h4>Important decisions</h4><ul>${DECISIONS[r.id].map(s=>`<li>${esc(s)}</li>`).join("")}</ul></div>`:""}
+    </div>
+    ${cps.map(c=>{const u=cpUnmet(c);return `<div class="alert ${u.length?"":"okay"}" style="margin-bottom:12px"><div style="flex:1"><div class="k">${u.length?"POINT OF NO RETURN":"CHECKPOINT CLEARED"}</div><h3>${esc(c.title)}</h3><div class="dim">${esc(c.text)}</div>${u.length?`<div style="margin-top:4px">${u.length} requirement${u.length>1?"s":""} open: ${u.map(x=>esc(QUEST_BY_ID[x.q].name)).join(", ")}</div>`:""}</div><button class="btn sm" data-act="goto-cp" data-cp="${c.id}">Checklist</button></div>`;}).join("")}
+    ${missWarn.length?`<div class="note">Missable here: ${missWarn.map(q=>esc(q.name)).join(" · ")}</div>`:""}
+    ${qs.length?qs.map(q=>questCard(q)).join(""):`<p class="muted">No tales match the current filter.</p>`}
+    ${refs.length?`<h4 style="font-family:var(--sans);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px">Tales that continue here</h4><div class="chips">${refs.map(q=>`<button class="chip" data-act="goto-quest" data-q="${q.id}">${esc(q.name)} · ${questPct(q)}%</button>`).join("")}</div>`:""}
+   </div></section>`;
+}
+
+function pMissable(){
+  const list = QUESTS.filter(q=>q.type==="missable" || (q.type==="true" && q.level==="critical") || q.level==="info" && q.trophy)
+    .sort((a,b)=>regionOrder(a.region)-regionOrder(b.region));
+  const counts = { critical:list.filter(q=>q.level==="critical"&&!questDone(q)).length, warning:list.filter(q=>q.level==="warning"&&!questDone(q)).length, info:list.filter(q=>q.level==="info"&&!questDone(q)).length };
+  return `<div class="page-head"><h2>Missable Quests</h2><p>Chronological list of tales that can fail or lock you out. Where guides disagree, the earliest reported deadline is shown.</p></div>
+   <div class="grid g3" style="margin-bottom:16px">
+    <div class="card"><span class="badge critical">Critical</span><p class="dim" style="font-size:13px;margin:8px 0 0">A boss or region transition can permanently fail the tale. <b>${counts.critical}</b> open.</p></div>
+    <div class="card"><span class="badge warning">Warning</span><p class="dim" style="font-size:13px;margin:8px 0 0">An earlier deadline or a dialogue choice can lock it. <b>${counts.warning}</b> open.</p></div>
+    <div class="card"><span class="badge info">Information</span><p class="dim" style="font-size:13px;margin:8px 0 0">Precautionary — the exact cutoff is uncertain. <b>${counts.info}</b> open.</p></div>
+   </div>
+   <div class="card" style="padding:6px 10px"><table class="mtable"><thead><tr><th></th><th>Quest</th><th>Region</th><th>Level</th><th>Failure trigger</th><th>What to do</th><th>Trophy</th><th>Deadline</th></tr></thead><tbody>
+   ${list.map(q=>{const d=questDone(q),t=q.trophy?TROPHY_BY_ID[q.trophy]:null;return `<tr class="${d?"done":""}">
+     <td><input type="checkbox" class="cb" data-chg="quest" data-q="${q.id}" ${d?"checked":""} aria-label="Mark ${esc(q.name)} complete"></td>
+     <td data-l="Quest"><button class="linkish" data-act="goto-quest" data-q="${q.id}"><b>${esc(q.name)}</b></button><div class="pct">${questPct(q)}%</div></td>
+     <td data-l="Region">${esc(regionName(q.region))}</td><td>${levelBadge(q.level)}</td>
+     <td data-l="Trigger">${esc(q.trigger)}</td><td data-l="Do">${esc(q.todo)}</td>
+     <td data-l="Trophy">${t?esc(t.name):"—"}</td><td data-l="Deadline">${esc(q.deadline)}</td></tr>`;}).join("")}
+   </tbody></table></div>`;
+}
+
+function trophyCard(t){
+  const got = !!P.completedTrophies[t.id], ready = trophyReady(t);
+  const qLinks = !t.quests.length ? "—" : t.quests.length>4 ? `${t.quests.length} true-ending tales` : t.quests.map(id=>`<button class="linkish" data-act="goto-quest" data-q="${id}">${esc(QUEST_BY_ID[id].name)}</button>`).join(", ");
+  return `<div class="card trophy ${got?"got":""}" id="trophy-${t.id}">
+   <div class="t-icon ${t.grade}" aria-hidden="true">${trophySvg()}</div>
+   <div style="flex:1;min-width:0">
+    <div class="toggle-row"><h4>${esc(t.name)}</h4><span class="badge" style="color:var(--${t.grade})">${t.grade}</span>${t.missable?'<span class="badge critical">Missable</span>':'<span class="badge">Not missable</span>'}</div>
+    <div class="desc">${esc(t.desc)}</div>
+    <div class="kv"><span><b>Quest:</b> ${qLinks}</span><span><b>Region:</b> ${esc(t.region)}</span></div>
+    ${t.note?`<div class="note">${esc(t.note)}</div>`:""}
+    <div class="toggle-row"><label class="toggle-row" style="cursor:pointer"><input type="checkbox" class="cb" data-chg="trophy" data-t="${t.id}" ${got?"checked":""}> <span>${got?"Unlocked":"Mark as unlocked"}</span></label>
+     ${!got&&ready?'<span class="badge ok">Requirements ticked</span>':""}</div>
+   </div></div>`;
+}
+function pTrophies(){
+  const groups=[["missable","Missable trophies"],["ending","Ending-related trophies"],["non","Non-missable trophies"],["other","All other trophies (bosses, upgrades, collectibles)"]];
+  const done = TROPHIES.filter(t=>P.completedTrophies[t.id]).length;
+  return `<div class="page-head"><h2>Trophy Collection</h2><p>All 35 trophies on the PS5 list, plus the Platinum. The ten tale-linked ones come first. Mark each when it pops in-game.</p></div>
+   <div class="card" style="margin-bottom:8px"><div class="toggle-row" style="justify-content:space-between"><b>${done} / ${TROPHIES.length} unlocked</b><span class="pct">${Math.round(done/TROPHIES.length*100)}%</span></div>${bar(Math.round(done/TROPHIES.length*100),"gold")}</div>
+   ${groups.map(([k,l])=>`<div class="section-title"><h2>${l}</h2><div class="line"></div></div><div class="grid g2">${TROPHIES.filter(t=>t.cat===k).map(trophyCard).join("")}</div>`).join("")}`;
+}
+
+function pOptional(){
+  const list = QUESTS.filter(q=>!q.trophy && q.type!=="true");
+  const f = P.settings.filter;
+  const shown = list.filter(q=>visible(q,f));
+  const done = list.filter(questDone).length;
+  return `<div class="page-head"><h2>Optional Side Quests</h2><p>Tales not tied to the trophies above. Some are still missable — they carry a red label. Where steps couldn't be verified they're marked "to be researched".</p></div>
+   <div class="card" style="margin-bottom:16px">${filterBar()}<div style="margin-top:12px">${bar(list.length?Math.round(done/list.length*100):0,"good")}<div class="pct" style="margin-top:4px">${done} / ${list.length} complete</div></div></div>
+   ${shown.length?shown.sort((a,b)=>regionOrder(a.region)-regionOrder(b.region)).map(q=>questCard(q,{showRegion:true})).join(""):'<p class="muted">No tales match the current filter.</p>'}`;
+}
+
+function pJournal(){
+  const j = P.journalEntries;
+  const f = (k,l,ph,rows=3)=>`<div class="field"><label for="j-${k}">${l}</label><textarea id="j-${k}" rows="${rows}" data-journal="${k}" placeholder="${esc(ph)}">${esc(j[k])}</textarea></div>`;
+  return `<div class="page-head"><h2>Game Journal</h2><p>Your own notes. Saved automatically as you type.</p></div>
+   <div class="grid g2">
+    <div class="card">${f("location","Current location","e.g. Cliffside Lodge Bell",2)}${f("npc","Last NPC spoken to","e.g. Lanlan on the bridge",2)}${f("bosses","Bosses defeated","",4)}</div>
+    <div class="card">${f("discoveries","Important discoveries","",4)}${f("remember","Things to remember","e.g. Return the Primal Stone before leaving!",4)}</div>
+   </div>
+   <div class="card" style="margin-top:14px"><div class="field"><label for="newNote">Dated note</label><textarea id="newNote" rows="2" placeholder="Write a quick note and press Add"></textarea></div>
+    <button class="btn primary sm" data-act="add-note">Add note</button>
+    <ul class="notes-list">${j.notes.slice().reverse().map(n=>`<li><div style="flex:1"><time>${esc(n.at?new Date(n.at).toLocaleString():"")}</time>${esc(n.text)}</div><button class="btn sm ghost" data-act="del-note" data-id="${esc(n.id)}" aria-label="Delete note">✕</button></li>`).join("")||'<li class="muted">No notes yet.</li>'}</ul></div>`;
+}
+
+function sw(key, label, desc){
+  return `<div class="setting"><div><b>${label}</b><p>${desc}</p></div><label class="switch"><input type="checkbox" data-chg="setting" data-k="${key}" ${P.settings[key]?"checked":""}><span></span><span class="sr-only">${label}</span></label></div>`;
+}
+function pSettings(){
+  let used = 0; try{ used = (localStorage.getItem(STORAGE_KEY)||"").length; }catch(_){}
+  return `<div class="page-head"><h2>Settings</h2></div>
+   <div class="grid g2">
+    <div class="card"><h3 style="font-size:22px;margin-bottom:4px">Display</h3>
+     ${sw("showCompleted","Show completed quests","Hide finished tales to focus on what's left.")}
+     <div class="setting"><div><b>Checklist density</b><p>Compact fits more on screen.</p></div><select data-chg="density" aria-label="Checklist density"><option value="comfortable" ${P.settings.density==="comfortable"?"selected":""}>Comfortable</option><option value="compact" ${P.settings.density==="compact"?"selected":""}>Compact</option></select></div>
+     ${sw("warnings","Checkpoint warnings","Show the banner when you're near a point of no return.")}
+     ${sw("artwork","Background artwork","Turn off to save data or for a cleaner look.")}
+    </div>
+    <div class="card"><h3 style="font-size:22px;margin-bottom:4px">Storage</h3>
+     <div class="setting"><div><b>Status</b><p>${storageOK?`Saving to this browser · ${(used/1024).toFixed(1)} KB used`:"Unavailable — progress will be lost when this tab closes."}</p><p>${P.lastUpdated?"Last saved "+esc(new Date(P.lastUpdated).toLocaleString()):"Nothing saved yet."}</p></div><span class="badge ${storageOK?"ok":"critical"}">${storageOK?"Active":"Off"}</span></div>
+     <div class="note" style="border-left-color:var(--success)">Your progress is saved privately in this browser. No account or registration is required. Your progress is not uploaded to a server.</div>
+     <p class="muted" style="font-size:13px">Progress belongs to this browser on this device. Clearing site data, using a private window, or switching browser or device will lose or hide it. No cookies, analytics or tracking are used.</p>
+    </div>
+   </div>
+   <div class="card" style="margin-top:14px"><h3 style="font-size:22px;margin-bottom:4px">Reset</h3>
+    <div class="setting"><div><b>Reset a region</b><p>Clears tales, objectives and the completion toggle for one region.</p></div>
+     <div class="toggle-row"><select id="resetRegionSel" aria-label="Region to reset">${REGIONS.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select><button class="btn sm danger" data-act="reset-region-sel">Reset</button></div></div>
+    <div class="setting"><div><b>Clear personal journal</b><p>Deletes all journal fields and notes.</p></div><button class="btn sm danger" data-act="clear-journal">Clear journal</button></div>
+    <div class="setting"><div><b>Reset all progress</b><p>Erases every quest, objective, trophy, region and journal entry stored in this browser.</p></div><button class="btn danger" data-act="reset-all">Reset all progress</button></div>
+   </div>
+   <div class="card" style="margin-top:14px" id="sources"><h3 style="font-size:22px;margin-bottom:6px">Sources</h3>
+    <p class="muted" style="font-size:13px;margin-top:0">Quest steps were checked against PowerPyx (updated Nov 2026). Lines marked "unverified" come from the original brief. Always trust your in-game Journal.</p>
+    <ul class="sources">${SOURCES.map(([l,u])=>`<li><a href="${u}" target="_blank" rel="noopener noreferrer">${esc(l)}</a></li>`).join("")}</ul>
+    <p class="muted" style="font-size:12px">Images: ${IMAGES.map(i=>esc(i.credit)).join(" · ")}. Phantom Blade Zero © S-Game. Unofficial fan-made companion.</p></div>`;
+}
+
+/* =========================================================
+   6. ACTIONS
+   ========================================================= */
+function setObjective(q, i, val){
+  const id = objId(q,i);
+  if(!val && P.completedQuests[q.id]){ // unticking an objective under a manual override
+    delete P.completedQuests[q.id];
+    q.objectives.forEach((_,k)=>{ if(k!==i) P.completedObjectives[objId(q,k)] = true; });
+  }
+  if(val) P.completedObjectives[id]=true; else delete P.completedObjectives[id];
+}
+function setQuest(q, val){
+  if(val){ P.completedQuests[q.id]=true; }
+  else { delete P.completedQuests[q.id]; q.objectives.forEach((_,i)=>delete P.completedObjectives[objId(q,i)]); }
+}
+function resetQuest(q){ delete P.completedQuests[q.id]; q.objectives.forEach((_,i)=>delete P.completedObjectives[objId(q,i)]); }
+function resetRegion(rid){ regionQuests(REGIONS[REGION_INDEX[rid]]).forEach(resetQuest); delete P.completedRegions[rid]; }
+function commit(msg){ saveProgress(); render(); if(msg) toast(msg); }
+
+function navigate(p, target){
+  page = p; closeNav();
+  if(location.hash!=="#"+p) history.replaceState(null,"","#"+p);
+  render();
+  requestAnimationFrame(()=>{
+    let el=null;
+    if(target?.quest){ el=document.getElementById("quest-"+target.quest); }
+    else if(target?.region){ el=document.getElementById("region-"+target.region); }
+    else if(target?.trophy){ el=document.getElementById("trophy-"+target.trophy); }
+    else if(target?.cp){ el=document.getElementById("cp-"+target.cp); }
+    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),2200); }
+    else window.scrollTo({top:0});
+  });
+}
+function gotoQuest(id){
+  const q = QUEST_BY_ID[id]; if(!q) return;
+  P.settings.expanded[id]=true; delete P.settings.collapsedRegions[q.region];
+  const f = P.settings.filter;
+  if(!visible(q,f)){ P.settings.filter="all"; if(!P.settings.showCompleted && questDone(q)) P.settings.showCompleted=true; }
+  saveSoon();
+  navigate(REGION_INDEX[q.region]===undefined ? "optional" : "regions",{quest:id});
+}
+
+document.addEventListener("click", async e=>{
+  const el = e.target.closest("[data-act]"); if(!el) return;
+  const a = el.dataset.act;
+  switch(a){
+    case "nav": navigate(el.dataset.page); break;
+    case "toggle-nav": document.body.classList.toggle("nav-open"); break;
+    case "close-nav": closeNav(); break;
+    case "toggle-quest": {
+      const id=el.dataset.q; if(P.settings.expanded[id]) delete P.settings.expanded[id]; else P.settings.expanded[id]=true;
+      const card=document.getElementById("quest-"+id); if(card){ card.classList.toggle("open"); card.querySelectorAll("[aria-expanded]").forEach(b=>b.setAttribute("aria-expanded",card.classList.contains("open"))); }
+      saveSoon(); break; }
+    case "toggle-region": {
+      if(e.target.closest("input,button:not([data-act=toggle-region])")) return;
+      const id=el.dataset.r; if(P.settings.collapsedRegions[id]) delete P.settings.collapsedRegions[id]; else P.settings.collapsedRegions[id]=true;
+      const sec=document.getElementById("region-"+id); if(sec){ sec.classList.toggle("collapsed"); el.setAttribute("aria-expanded",!sec.classList.contains("collapsed")); }
+      saveSoon(); break; }
+    case "quest-all": { const q=QUEST_BY_ID[el.dataset.q]; pushUndo(); q.objectives.forEach((_,i)=>P.completedObjectives[objId(q,i)]=true); commit(`${q.name}: all objectives ticked`); break; }
+    case "quest-reset": { const q=QUEST_BY_ID[el.dataset.q]; if(await confirmBox("Reset this tale?",`All objectives for "${q.name}" will be unticked.`)){ pushUndo(); resetQuest(q); commit("Tale reset"); } break; }
+    case "reset-region": case "reset-region-sel": {
+      const rid = a==="reset-region" ? el.dataset.r : $("#resetRegionSel").value; const r=REGIONS[REGION_INDEX[rid]];
+      if(await confirmBox(`Reset ${r.name}?`,"Every tale and objective in this region will be unticked.")){ pushUndo(); resetRegion(rid); commit(`${r.name} reset`); } break; }
+    case "set-region": pushUndo(); P.currentRegion=el.dataset.r; commit(`Current region: ${REGIONS[REGION_INDEX[el.dataset.r]].name}`); break;
+    case "goto-region": delete P.settings.collapsedRegions[el.dataset.r]; saveSoon(); navigate("regions",{region:el.dataset.r}); break;
+    case "goto-quest": gotoQuest(el.dataset.q); break;
+    case "goto-trophy": navigate("trophies",{trophy:el.dataset.t}); break;
+    case "goto-cp": navigate("story",{cp:el.dataset.cp}); break;
+    case "filter": P.settings.filter=el.dataset.f; saveProgress(); render(); break;
+    case "undo": undo(); break;
+    case "add-note": { const t=$("#newNote"); const v=t.value.trim(); if(!v) return; P.journalEntries.notes.push({id:uid(),text:v.slice(0,4000),at:new Date().toISOString()}); commit("Note added"); break; }
+    case "del-note": P.journalEntries.notes=P.journalEntries.notes.filter(n=>n.id!==el.dataset.id); commit(); break;
+    case "clear-journal": if(await confirmBox("Clear your journal?","All journal fields and dated notes will be deleted. This cannot be undone.")){ P.journalEntries=defaultJournal(); commit("Journal cleared"); } break;
+    case "reset-all":
+      if(await confirmBox("Reset ALL progress?","This erases every quest, objective, trophy, region and journal entry stored locally in this browser. It cannot be undone.","Erase everything")){
+        const keep = { ...P.settings, expanded:{}, collapsedRegions:{}, filter:"all" };
+        P = defaultProgress(); P.settings = keep; undoStack.length=0; commit("All progress has been reset");
+      } break;
+  }
+});
+
+document.addEventListener("change", e=>{
+  const el=e.target; const c=el.dataset.chg; if(!c) return;
+  switch(c){
+    case "obj": { const q=QUEST_BY_ID[el.dataset.q]; pushUndo(); setObjective(q, +el.dataset.i, el.checked); commit(); break; }
+    case "quest": { const q=QUEST_BY_ID[el.dataset.q]; pushUndo(); setQuest(q, el.checked); commit(el.checked?`${q.name} marked complete`:null); break; }
+    case "region": { pushUndo(); const r=el.dataset.r; if(el.checked) P.completedRegions[r]=true; else delete P.completedRegions[r]; commit(); break; }
+    case "trophy": { pushUndo(); const t=el.dataset.t; if(el.checked) P.completedTrophies[t]=true; else delete P.completedTrophies[t]; commit(el.checked?"🏆 Trophy recorded":null); break; }
+    case "cur-region": pushUndo(); P.currentRegion=el.value; commit(); break;
+    case "cur-cp": pushUndo(); P.currentCheckpoint=el.value||null; commit(); break;
+    case "setting": P.settings[el.dataset.k]=el.checked; commit(); break;
+    case "density": P.settings.density=el.value; commit(); break;
+  }
+});
+document.addEventListener("input", e=>{
+  const k=e.target.dataset.journal; if(!k) return;
+  P.journalEntries[k]=e.target.value.slice(0,4000); saveSoon(500);
+});
+document.addEventListener("keydown", e=>{
+  if((e.key==="Enter"||e.key===" ") && e.target.matches("[role=button][data-act]")){ e.preventDefault(); e.target.click(); }
+  if(e.key==="Escape"){ closeNav(); closeResults(); }
+});
+function closeNav(){ document.body.classList.remove("nav-open"); }
+
+/* Modal & toast */
+function confirmBox(title, text, okLabel="Confirm"){
+  return new Promise(res=>{
+    const m=$("#modal"); $("#modalTitle").textContent=title; $("#modalText").textContent=text; $("#modalOk").textContent=okLabel;
+    const prev=document.activeElement; m.classList.add("open"); $("#modalCancel").focus();
+    const done=v=>{ m.classList.remove("open"); $("#modalOk").onclick=$("#modalCancel").onclick=null; m.onkeydown=null; if(prev&&prev.focus) prev.focus(); res(v); };
+    $("#modalOk").onclick=()=>done(true); $("#modalCancel").onclick=()=>done(false);
+    m.onkeydown=ev=>{ if(ev.key==="Escape") done(false); };
+    m.onclick=ev=>{ if(ev.target===m) done(false); };
+  });
+}
+let toastT; function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),2200); }
+
+/* =========================================================
+   7. SEARCH
+   ========================================================= */
+const norm = s => String(s).toLowerCase().replace(/[’‘]/g,"'").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const SEARCH = [];
+QUESTS.forEach(q=>SEARCH.push({ label:q.name, sub:`Tale · ${regionName(q.region)}${q.trophy?" · 🏆 "+TROPHY_BY_ID[q.trophy].name:""}`, act:()=>gotoQuest(q.id),
+  text:norm([q.name,q.npc,q.trigger,q.todo,q.deadline,q.objectives.join(" "),q.note||""].join(" ")) }));
+REGIONS.forEach(r=>SEARCH.push({ label:r.name, sub:"Region", act:()=>{ delete P.settings.collapsedRegions[r.id]; navigate("regions",{region:r.id}); }, text:norm([r.name,r.intro].join(" ")) }));
+REGIONS.forEach(r=>r.bosses.forEach(b=>SEARCH.push({ label:b, sub:`Boss · ${r.name}`, act:()=>{ delete P.settings.collapsedRegions[r.id]; navigate("regions",{region:r.id}); }, text:norm(b+" boss") })));
+REGIONS.forEach(r=>r.npcs.forEach(n=>SEARCH.push({ label:n, sub:`NPC · ${r.name}`, act:()=>{ delete P.settings.collapsedRegions[r.id]; navigate("regions",{region:r.id}); }, text:norm(n+" npc") })));
+TROPHIES.forEach(t=>SEARCH.push({ label:t.name, sub:`Trophy · ${t.grade}`, act:()=>navigate("trophies",{trophy:t.id}), text:norm([t.name,t.desc,"trophy"].join(" ")) }));
+
+let hits=[], kbIdx=-1;
+function runSearch(v){
+  const box=$("#results"); const toks=norm(v).trim().split(/\s+/).filter(Boolean);
+  if(!toks.length){ closeResults(); return; }
+  hits = SEARCH.map(s=>{ if(!toks.every(t=>s.text.includes(t))) return null; const l=norm(s.label); return {s,score:(l.startsWith(toks[0])?3:0)+(toks.every(t=>l.includes(t))?2:0)}; })
+    .filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,14).map(x=>x.s);
+  kbIdx=-1;
+  box.innerHTML = hits.length ? hits.map((h,i)=>`<button role="option" data-hit="${i}">${esc(h.label)}<small>${esc(h.sub)}</small></button>`).join("") : `<div class="empty">No matches for “${esc(v)}”.</div>`;
+  box.classList.add("open");
+}
+function closeResults(){ $("#results").classList.remove("open"); }
+$("#search").addEventListener("input", e=>runSearch(e.target.value));
+$("#search").addEventListener("focus", e=>{ if(e.target.value) runSearch(e.target.value); });
+$("#search").addEventListener("keydown", e=>{
+  const btns=[...document.querySelectorAll("#results [data-hit]")]; if(!btns.length) return;
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); kbIdx=(kbIdx+(e.key==="ArrowDown"?1:-1)+btns.length)%btns.length; btns.forEach((b,i)=>b.classList.toggle("kb",i===kbIdx)); }
+  if(e.key==="Enter"){ e.preventDefault(); pickHit(kbIdx<0?0:kbIdx); }
+});
+$("#results").addEventListener("click", e=>{ const b=e.target.closest("[data-hit]"); if(b) pickHit(+b.dataset.hit); });
+document.addEventListener("click", e=>{ if(!e.target.closest(".search")) closeResults(); });
+function pickHit(i){ const h=hits[i]; if(!h) return; closeResults(); $("#search").value=""; $("#search").blur(); h.act(); }
+
+/* =========================================================
+   8. BOOT
+   ========================================================= */
+window.addEventListener("hashchange", ()=>{ const h=location.hash.slice(1); if(PAGES.some(p=>p[0]===h) && h!==page) navigate(h); });
+loadProgress();
+{ const h=location.hash.slice(1); if(PAGES.some(p=>p[0]===h)) page=h; }
+render();
+setIndicator(storageOK?"ok":"err", storageOK ? (P.lastUpdated?"Saved":"Ready") : "Not saved");
+</script>
+</body>
+</html>
